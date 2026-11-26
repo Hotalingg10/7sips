@@ -410,6 +410,14 @@ details.mv .mv-p { margin:4px 0 8px; }
 .in-fb1 { font-size:12.5px; color:var(--ink-dim,#94806A); } .in-fb1 b { color:var(--ink,#2B1A0F); }
 .in-fb2 { font-size:14.5px; margin:3px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
 .in-fb3 { font-size:11.5px; color:var(--ink-dim,#94806A); }
+/* Daily splash */
+.wl-splash.daily { cursor:pointer; }
+.wl-splash.daily h2 { margin:0; font-size:30px; letter-spacing:.01em; }
+.wl-splash.daily .sp-hol { font-size:18px; font-weight:700; color:#3A1607; opacity:0; animation:wlUp .5s 1.35s ease-out forwards; }
+.wl-splash.daily .sp-day { font-size:15px; font-weight:600; color:#5A3A22; opacity:0; animation:wlUp .5s 1.5s ease-out forwards; }
+.wl-splash.daily .sp-tap { font-size:13px; font-weight:600; color:#4A2410; opacity:0; animation:wlUp .5s 1.9s ease-out forwards; }
+@keyframes wlUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce) { .wl-splash.daily .sp-hol, .wl-splash.daily .sp-day, .wl-splash.daily .sp-tap { animation:none; opacity:1; } }
 </style></head><body><div style="position:sticky;top:0;z-index:999;background:#0B0D12;color:#FFC24B;font:600 12.5px system-ui;text-align:center;padding:6px">PREVIEW · test copy · separate save and test leaderboard</div><div class="wrap" id="app">
 <header class="app-hd">
   <div class="hd-row"><div class="brand"><svg class="wl-logo" viewBox="0 0 1024 1024" width="30" height="30" role="img" aria-label="Wakeline Media"><defs><linearGradient id="wlSunH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1B8"/><stop offset="1" stop-color="#FFC24B"/></linearGradient></defs><rect width="1024" height="1024" rx="230" fill="#FF5A36"/><polyline class="wl-line" points="200,430 318,700 440,470 560,700 700,330" fill="none" stroke="#0B0D12" stroke-width="70" stroke-linejoin="round" stroke-linecap="round"/><circle class="wl-sun" cx="790" cy="236" r="92" fill="url(#wlSunH)"/></svg><span class="wm7">7 Sips</span><span class="beta-tag">Beta</span></div><div id="hdMe"></div></div>
@@ -7799,5 +7807,99 @@ function fixCopy(root) {
 { const _dp6 = drawProfile; drawProfile = function () { const r = _dp6.apply(this, arguments); try { fixCopy($('profileView')); } catch (e) {} return r; }; }
 { const _so = showOnboarding; showOnboarding = function () { const r = _so.apply(this, arguments); try { fixCopy(document.body); } catch (e) {} return r; }; }
 try { fixCopy(document.body); } catch (e) {}
+
+// ---------------- Nov 26 (pm): daily Wakeline splash with holidays, public-name notice, name filter ----------------
+
+// ---- holidays (US): fixed dates plus the ones that move every year ----
+function nthDow(y, m, dow, n) {                 // n-th weekday (0=Sun) of month m (1-12); n = -1 for the last one
+  if (n > 0) { const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay(); return Date.UTC(y, m - 1, 1 + ((dow - first + 7) % 7) + 7 * (n - 1)); }
+  const last = new Date(Date.UTC(y, m, 0)), ld = last.getUTCDay(); return Date.UTC(y, m - 1, last.getUTCDate() - ((ld - dow + 7) % 7));
+}
+function easterUTC(y) {                          // Anonymous Gregorian algorithm
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3),
+    h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451),
+    mo = Math.floor((h + l - 7 * m + 114) / 31), da = ((h + l - 7 * m + 114) % 31) + 1;
+  return Date.UTC(y, mo - 1, da);
+}
+const keyOfUTC = t => new Date(t).toISOString().slice(0, 10);
+function holidayOf(dk) {
+  const y = +dk.slice(0, 4), md = dk.slice(5);
+  const fixed = {
+    '01-01': ['🎉', 'Happy New Year'], '02-14': ['💘', 'Happy Valentine’s Day'], '03-17': ['☘️', 'Happy St. Patrick’s Day'],
+    '06-19': ['🎉', 'Celebrating Juneteenth'], '07-04': ['🎆', 'Happy Fourth of July'], '10-31': ['🎃', 'Happy Halloween'],
+    '11-11': ['🇺🇸', 'Veterans Day · Thank you to all who served'], '12-24': ['🎄', 'Merry Christmas Eve'], '12-25': ['🎄', 'Merry Christmas'], '12-31': ['🥂', 'Happy New Year’s Eve']
+  };
+  if (fixed[md]) return fixed[md];
+  const moving = [
+    [nthDow(y, 1, 1, 3), '🕊️', 'Martin Luther King Jr. Day'], [nthDow(y, 2, 1, 3), '🇺🇸', 'Happy Presidents’ Day'], [easterUTC(y), '🐣', 'Happy Easter'],
+    [nthDow(y, 5, 0, 2), '💐', 'Happy Mother’s Day'], [nthDow(y, 5, 1, -1), '🇺🇸', 'Memorial Day · Remembering those who served'],
+    [nthDow(y, 6, 0, 3), '👔', 'Happy Father’s Day'], [nthDow(y, 9, 1, 1), '🛠️', 'Happy Labor Day'], [nthDow(y, 11, 4, 4), '🦃', 'Happy Thanksgiving']
+  ];
+  const hit = moving.find(x => keyOfUTC(x[0]) === dk);
+  return hit ? [hit[1], hit[2]] : null;
+}
+
+// ---- the splash: once a day, the first time the game opens; short, tap to skip ----
+const DAILY_SPLASH_KEY = NS + 'splash:day';
+maybeSplash = function () {
+  if (!ME || !ME.onboarded || !isLive(TODAY)) return;
+  try { if (localStorage.getItem('sips-nosplash') === '1') return; } catch (e) {}
+  let firstEver = false;
+  try {
+    if (localStorage.getItem(DAILY_SPLASH_KEY) === TODAY) return;
+    localStorage.setItem(DAILY_SPLASH_KEY, TODAY);
+    if (!localStorage.getItem(SPLASH_KEY)) { localStorage.setItem(SPLASH_KEY, '1'); firstEver = true; }
+  } catch (e) { return; }
+  if (document.querySelector('.wl-splash')) return;
+  const hol = holidayOf(TODAY), g = titleOf(raceGameOf(TODAY)), day = DAYLONG[dowOf(TODAY)];
+  const d = document.createElement('div'); d.className = 'wl-splash daily' + (hol ? ' hol' : '');
+  d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Wakeline Media · ' + (hol ? hol[1] + ' · ' : '') + day + ' · ' + g);
+  d.innerHTML = WL_LOGO('sp') + '<div class="k">Wakeline Media presents</div><h2>7 Sips</h2>' +
+    (hol ? '<div class="sp-hol"><span aria-hidden="true">' + hol[0] + '</span> ' + escH(hol[1]) + '</div>' : '') +
+    '<div class="sp-day">' + escH(day) + ' · ' + escH(g) + '</div>' +
+    (firstEver ? '<p>Seven morning games, one a day. Your weekly points race for the Espresso Trophy.</p><button type="button" id="splashGo">Let’s play</button>' : '<div class="sp-tap">Tap to start</div>');
+  document.body.appendChild(d);
+  const close = () => { if (d.classList.contains('out')) return; d.classList.add('out'); setTimeout(() => d.remove(), 480); };
+  d.addEventListener('click', close);
+  document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape' || e.key === 'Enter') { close(); document.removeEventListener('keydown', esc); } });
+  if (!firstEver) setTimeout(close, reducedMotion() ? 1600 : 2700);
+  else setTimeout(() => { try { d.querySelector('#splashGo').focus(); } catch (e) {} }, 2200);
+};
+try { maybeSplash(); } catch (e) {}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { try { maybeSplash(); } catch (e) {} } });   // left open overnight: still greets the new day
+
+// ---- names: shown on the Race tab, so no profanity (the database checks the same list) ----
+const NAME_SUB = ['fuck', 'shit', 'cunt', 'nigg', 'fagg', 'bitch', 'whore', 'slut', 'rapist', 'porn', 'pussy', 'penis', 'vagina', 'dildo', 'jizz', 'kike', 'retard', 'twat', 'bastard', 'asshole', 'motherf', 'hitler', 'nazi', 'cocksuck', 'blowjob', 'tranny', 'bollock', 'boob', 'horny', 'testicle'];
+const NAME_WORD = ['ass', 'arse', 'dick', 'cock', 'cum', 'tit', 'tits', 'spic', 'chink', 'gook', 'fag', 'homo', 'sex', 'sexy', 'hoe', 'hoes', 'rape', 'kys', 'wtf', 'stfu', 'kkk', 'coon', 'damn', 'piss', 'crap', 'nude', 'nudes', 'balls', 'butt', 'hell', 'anal', 'anus', 'semen', 'wank', 'wanker'];
+const NN_FROM = '0134@5\u002478!|', NN_TO = 'oieaasstbii';   // leet letters -> plain letters (\u0024 is the dollar sign)
+function nameNorm(s) { return String(s || '').toLowerCase().split('').map(c => { const i = NN_FROM.indexOf(c); return i >= 0 ? NN_TO[i] : c; }).join(''); }
+function badName(s) {
+  const n = nameNorm(s), joined = n.replace(/[^a-z]/g, ''), words = n.split(/[^a-z]+/).filter(Boolean);
+  return NAME_SUB.some(w => joined.indexOf(w) >= 0) || words.some(w => NAME_WORD.indexOf(w) >= 0) || NAME_WORD.some(w => w.length >= 4 && joined === w);
+}
+// onboarding + "Change my name": refuse blocked names before saving
+document.addEventListener('submit', e => {
+  const f = e.target; if (!f || (f.id !== 'obForm' && f.id !== 'nmForm')) return;
+  const inp = f.id === 'obForm' ? $('obName') : $('nmIn'), err = f.id === 'obForm' ? $('obErr') : $('nmErr');
+  if (inp && badName(inp.value)) { e.preventDefault(); e.stopImmediatePropagation(); if (err) err.textContent = 'Please pick a different name. It shows on the Race tab for everyone.'; try { inp.focus(); } catch (er) {} }
+}, true);
+COPY_FIX.push(['Shown on your profile and on the week you text to Griffin. 1 to 20 characters.', 'Shown on the Race leaderboard for other players, so a first name or nickname is best. 1 to 20 characters.']);
+try { fixCopy(document.body); } catch (e) {}
+// "Change my name" form gets the same reminder
+{ const _dp7 = drawProfile; drawProfile = function () {
+    const r = _dp7.apply(this, arguments);
+    try { const b = $('nmEdit'); if (b) b.addEventListener('click', () => setTimeout(() => { const e = $('nmErr'); if (e && !$('nmHelp')) e.insertAdjacentHTML('beforebegin', '<div class="ob-help" id="nmHelp">Shown on the Race tab for other players.</div>'); }, 0)); } catch (e) {}
+    return r; }; }
+
+// ---- players who joined before the leaderboard: a one-time heads-up ----
+function maybeNameNote() {
+  if (!cleaned() || !ME || !ME.onboarded || !isLive()) return;
+  if (personal['note:name-public']) return;
+  if ((ME.created || 0) >= Date.parse(CLEAN_FROM + 'T05:00:00Z')) { personal['note:name-public'] = 1; return; }   // joined after: they saw the notice when signing up
+  personal['note:name-public'] = 1;
+  showNote('name-public', '<b>New: the Race tab.</b> Your name <b>' + escH(ME.name) + '</b> now shows on the weekly standings for other players. You can change it anytime in Profile.');
+}
+{ const _ea2 = enterApp; enterApp = function () { const r = _ea2.apply(this, arguments); setTimeout(maybeNameNote, 0); return r; }; }
+try { maybeNameNote(); } catch (e) {}
 
 </script></body></html>
