@@ -241,7 +241,8 @@
   .game-shell.howfirst #game .gd-card-label:first-child, .game-shell.howfirst #game > .gd-card-label { padding-right:132px; }
   .game-shell #game .br-fine { margin-right:40px; } .game-shell.howfirst #game .br-fine { margin-right:128px; }
   /* Badges tab + filters */
-  .tabs { grid-template-columns:repeat(4,1fr); gap:5px; } .tabs button { font-size:14px; padding:0 2px; }
+  .tabs { grid-template-columns:repeat(5,1fr); gap:4px; } .tabs button { font-size:13.5px; padding:0 1px; }
+  @media (max-width:350px) { .tabs button { font-size:12.5px; } }
   .flt { display:flex; gap:6px; overflow-x:auto; padding:2px 16px 8px; margin:0 -16px 6px; scrollbar-width:none; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity; }
   .flt::-webkit-scrollbar { display:none; }
   .flt-chip { flex:none; min-height:44px; padding:0 13px; border-radius:999px; border:1px solid var(--line); background:#FFFDF6; color:var(--ink); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; scroll-snap-align:center; }
@@ -362,12 +363,22 @@
 .lb-empty, .lb-foot { font-size:12.5px; color:var(--ink-dim,#94806A); margin-top:8px; }
 .lb-last { margin-top:10px; padding:8px 10px; border-radius:10px; background:rgba(230,190,85,.18); font-size:13px; }
 .cloud-stat { font-size:13px; color:#2F6B3A; margin:4px 0 8px; }
+/* Race tab */
+#raceView .lb { margin-top:0; margin-bottom:12px; }
+.rc-champ { display:flex; gap:12px; align-items:center; margin:0 0 12px; padding:12px; border-radius:14px; border:1px solid rgba(181,84,30,.35); background:linear-gradient(135deg,#FFF1C9,#F6D58A); }
+.rc-champ-mug { width:64px; height:64px; flex:none; }
+.rc-champ-mug svg { display:block; }
+.rc-k { font-size:12px; font-weight:700; letter-spacing:.02em; color:#8A3E12; }
+.rc-champ b { display:block; font-size:19px; margin-top:2px; }
+.rc-champ small { display:block; font-size:12px; color:#B5541E; }
+.rc-sub { font-size:12.5px; color:#6B4A2E; margin-top:2px; }
+.ss-tr { font-size:13px; color:var(--ink,#2B1A0F); }
 </style></head><body><div style="position:sticky;top:0;z-index:999;background:#0B0D12;color:#FFC24B;font:600 12.5px system-ui;text-align:center;padding:6px">PREVIEW · test copy · separate save and test leaderboard</div><div class="wrap" id="app">
 <header class="app-hd">
   <div class="hd-row"><div class="brand"><svg class="wl-logo" viewBox="0 0 1024 1024" width="30" height="30" role="img" aria-label="Wakeline Media"><defs><linearGradient id="wlSunH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1B8"/><stop offset="1" stop-color="#FFC24B"/></linearGradient></defs><rect width="1024" height="1024" rx="230" fill="#FF5A36"/><polyline class="wl-line" points="200,430 318,700 440,470 560,700 700,330" fill="none" stroke="#0B0D12" stroke-width="70" stroke-linejoin="round" stroke-linecap="round"/><circle class="wl-sun" cx="790" cy="236" r="92" fill="url(#wlSunH)"/></svg><span class="wm7">7 Sips</span><span class="beta-tag">Beta</span></div><div id="hdMe"></div></div>
   <div class="hd-date" id="hdDate"></div>
 </header>
-<nav class="tabs" id="tabs" aria-label="Main" hidden><button type="button" id="tab-play" class="on" aria-current="page">Play</button><button type="button" id="tab-profile" aria-current="false">Profile</button><button type="button" id="tab-badges" aria-current="false">Badges</button><button type="button" id="tab-shop" aria-current="false">Shop</button></nav>
+<nav class="tabs" id="tabs" aria-label="Main" hidden><button type="button" id="tab-play" class="on" aria-current="page">Play</button><button type="button" id="tab-race" aria-current="false">Race</button><button type="button" id="tab-profile" aria-current="false">Profile</button><button type="button" id="tab-badges" aria-current="false">Badges</button><button type="button" id="tab-shop" aria-current="false">Shop</button></nav>
 <div id="noticeMount"></div>
 <div id="onboard" hidden></div>
 <main id="appMain" hidden>
@@ -382,6 +393,7 @@
 <div id="weekMount"></div>
 <div id="weekCard"></div>
 </section>
+<section id="raceView" aria-label="Race" hidden><h2 class="vw-h">The Race</h2><div id="raceMount"></div></section>
 <section id="profileView" aria-label="Profile" hidden><h2 class="vw-h">Profile</h2><div id="profileMount"></div><div id="profileExtra"></div></section>
 <section id="badgesView" aria-label="Badges" hidden><h2 class="vw-h">Badges</h2><div id="badgesMount"></div></section>
 <section id="shopView" aria-label="Shop" hidden></section>
@@ -6924,12 +6936,12 @@ let activeTab = 'play';
 function showTab(t) {
   if (!ME) return;
   activeTab = t;
-  ['play', 'profile', 'badges', 'shop'].forEach(x => {
+  ['play', 'race', 'profile', 'badges', 'shop'].forEach(x => {
     $(x + 'View').hidden = x !== t;
     const b = $('tab-' + x); b.setAttribute('aria-current', x === t ? 'page' : 'false'); b.classList.toggle('on', x === t);
   });
   if (t === 'play') startGame();
-  else { if (typeof clearTriviaTimer === 'function' && T && !T.done) clearTriviaTimer(); if (t === 'profile') drawProfile(); else if (t === 'badges') drawBadges(); else { shopMsg = ''; drawShop(); } }
+  else { if (typeof clearTriviaTimer === 'function' && T && !T.done) clearTriviaTimer(); if (t === 'profile') drawProfile(); else if (t === 'race') drawRace(true); else if (t === 'badges') drawBadges(); else { shopMsg = ''; drawShop(); } }
   drawHeaderDate();
   try { window.scrollTo({ top: 0 }); } catch (e) {}
 }
@@ -7020,6 +7032,7 @@ $('tab-play').onclick = () => showTab('play');
 $('tab-profile').onclick = () => showTab('profile');
 $('tab-shop').onclick = () => showTab('shop');
 $('tab-badges').onclick = () => showTab('badges');
+$('tab-race').onclick = () => showTab('race');
 // Keyboard: game tiles that are not native buttons act like buttons.
 document.addEventListener('keydown', e => {
   const t = e.target; if (!t || !t.getAttribute || t.getAttribute('role') !== 'button' || /^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
@@ -7464,48 +7477,68 @@ async function cloudCheckTrophy() {
   SevenSipsProfile.recordWeekEnd(p, { weekKey: last, total: me.tot, rank: 1 });
   personal['profile'] = p;
   const c = cosState(); c.beans = (c.beans || 0) + 100; cosSave(c);
+  try { await cloudPushWeek(last); delete cloud.boardAt.season; } catch (e) {}
   try { drawHead(); } catch (e) {}
   try { celebrate(); } catch (e) {}
-  showNote('trophy-' + last, '<b>🏆 You won the Espresso Trophy</b> for the week of ' + escH(fmtShort(last)) + ' with ' + me.tot + ' points! It’s on your café shelf in Profile, plus 100 Beans.');
+  showNote('trophy-' + last, '<b>🏆 You won the Espresso Trophy</b> for the week of ' + escH(fmtShort(last)) + ' with ' + me.tot + ' points! It’s on your café shelf in Profile, plus 100 Beans. See the Race tab.');
 }
 
-// ---- leaderboard card on the Play tab ----
-function lbRowHtml(r) {
-  const lk = safeLook(r.look), tt = r.look && TITLE_TEXT[r.look.title] ? TITLE_TEXT[r.look.title] : '';
-  return '<li class="lb-row' + (r.is_me ? ' me' : '') + '"><span class="lb-rk">' + (r.rnk === 1 ? '🏆' : r.rnk) + '</span><span class="lb-mug" aria-hidden="true">' + WA.mug(lk, 34) + '</span>' +
-    '<span class="lb-nm"><b>' + escH(r.name) + (r.is_me ? ' <i>(you)</i>' : '') + '</b>' + (tt ? '<small>' + escH(tt) + '</small>' : '') + '</span><span class="lb-pts"><b>' + r.tot + '</b> pts</span></li>';
+// ---- the Race tab: this week, last week's champion, Season's Best Sipper standings ----
+async function cloudSeason(fresh) {
+  const k = 'season'; if (!fresh && cloud.board[k] && Date.now() - (cloud.boardAt[k] || 0) < 60000) return cloud.board[k];
+  const t = await cloudToken();
+  const rows = await cloudApi('/rest/v1/rpc/season_standings', { method: 'POST', auth: t, body: { p_from: SEASON_START, p_to: addDays(SEASON_START, 7 * (SEASON_WEEKS - 1)), p_env: CLOUD_ENV } });
+  cloud.board[k] = Array.isArray(rows) ? rows : []; cloud.boardAt[k] = Date.now();
+  return cloud.board[k];
 }
-function lbHtml(rows, lastRows) {
-  const wk = monOf(TODAY);
-  let h = '<section class="lb" aria-labelledby="lbH"><div class="lb-top"><h3 id="lbH">This week’s standings</h3><span class="lb-sub">Espresso Trophy race · week of ' + escH(fmtShort(wk)) + '</span></div>';
-  if (!rows) h += '<div class="lb-empty">Loading the standings…</div>';
-  else if (!rows.length) h += '<div class="lb-empty">No scores yet this week. Play today’s game to get on the board.</div>';
-  else {
-    const top = rows.slice(0, 10), me = rows.find(r => r.is_me);
-    h += '<ol class="lb-list">' + top.map(lbRowHtml).join('') + (me && me.rnk > 10 ? '<li class="lb-gap" aria-hidden="true">…</li>' + lbRowHtml(me) : '') + '</ol>';
-    h += '<div class="lb-foot">' + rows.length + ' player' + (rows.length === 1 ? '' : 's') + ' on the board · ties go to Sunday words found, then whoever got there first</div>';
+function lookOf(r) { return { lk: safeLook(r.look), tt: r.look && TITLE_TEXT[r.look.title] ? TITLE_TEXT[r.look.title] : '' }; }
+function lbRowHtml(r, right) {
+  const o = lookOf(r);
+  return '<li class="lb-row' + (r.is_me ? ' me' : '') + '"><span class="lb-rk">' + (r.rnk === 1 ? '🏆' : r.rnk) + '</span><span class="lb-mug" aria-hidden="true">' + WA.mug(o.lk, 34) + '</span>' +
+    '<span class="lb-nm"><b>' + escH(r.name) + (r.is_me ? ' <i>(you)</i>' : '') + '</b>' + (o.tt ? '<small>' + escH(o.tt) + '</small>' : '') + '</span><span class="lb-pts">' + right + '</span></li>';
+}
+function rowsHtml(rows, right, empty) {
+  if (!rows) return '<div class="lb-empty">Loading…</div>';
+  if (!rows.length) return '<div class="lb-empty">' + empty + '</div>';
+  const top = rows.slice(0, 10), me = rows.find(r => r.is_me);
+  return '<ol class="lb-list">' + top.map(r => lbRowHtml(r, right(r))).join('') + (me && me.rnk > 10 ? '<li class="lb-gap" aria-hidden="true">…</li>' + lbRowHtml(me, right(me)) : '') + '</ol>';
+}
+function raceHtml(d) {
+  const wk = monOf(TODAY), last = addDays(wk, -7), s = seasonInfo();
+  let h = '';
+  const champ = d.last && d.last.find(r => r.rnk === 1);
+  if (champ && last >= AUTO_TROPHY_FROM) {
+    const o = lookOf(champ);
+    h += '<section class="rc-champ" aria-labelledby="rcC"><div class="rc-champ-mug" aria-hidden="true">' + WA.mug(o.lk, 64) + '</div><div><div class="rc-k" id="rcC">🏆 Last week’s Espresso Trophy</div><b>' + escH(champ.name) + (champ.is_me ? ' (you!)' : '') + '</b>' +
+      (o.tt ? '<small>' + escH(o.tt) + '</small>' : '') + '<div class="rc-sub">' + champ.tot + ' pts · week of ' + escH(fmtShort(last)) + '</div></div></section>';
   }
-  const champ = lastRows && lastRows.find(r => r.rnk === 1);
-  if (champ && addDays(wk, -7) >= AUTO_TROPHY_FROM) h += '<div class="lb-last">Last week’s Espresso Trophy: <b>' + escH(champ.name) + '</b> · ' + champ.tot + ' pts</div>';
-  return h + '</section>';
+  h += '<section class="lb" aria-labelledby="lbH"><div class="lb-top"><h3 id="lbH">This week</h3><span class="lb-sub">Espresso Trophy race · week of ' + escH(fmtShort(wk)) + ' · updates as people play</span></div>' +
+    rowsHtml(d.week, r => '<b>' + r.tot + '</b> pts', 'No scores yet this week. Be the first on the board.') +
+    (d.week && d.week.length ? '<div class="lb-foot">Ties go to Sunday Word Search words found, then whoever got there first.</div>' : '') + '</section>';
+  h += '<section class="lb" aria-labelledby="ssH"><div class="lb-top"><h3 id="ssH">Season’s Best Sipper</h3><span class="lb-sub">Beta season · week ' + Math.max(1, Math.min(SEASON_WEEKS, s.wk)) + ' of ' + SEASON_WEEKS + ' · most Espresso Trophies, then most points</span></div>' +
+    rowsHtml(d.season, r => (r.trophies ? '<span class="ss-tr" title="Espresso Trophies">🏆' + (r.trophies > 1 ? '×' + r.trophies : '') + '</span> ' : '') + '<b>' + r.points + '</b> pts', 'Season points show up here once people start playing.') + '</section>';
+  return h;
 }
-let lbSeq = 0;
-async function drawBoard(fresh) {
-  if (!CLOUD_ON || !ME || !isLive() || GAME && GAME.practice) return;
-  const card = $('weekCard'); if (!card) return;
-  let m = $('lbMount'); if (!m) { m = document.createElement('div'); m.id = 'lbMount'; card.insertAdjacentElement('afterend', m); }
-  const wk = monOf(TODAY), seq = ++lbSeq;
-  if (!m.innerHTML) m.innerHTML = lbHtml(cloud.board[wk] || null, cloud.board[addDays(wk, -7)]);
+const race = { week: null, last: null, season: null };
+let raceSeq = 0;
+async function drawRace(fresh) {
+  const m = $('raceMount'); if (!m || !ME) return;
+  if (!CLOUD_ON) { m.innerHTML = '<div class="lb"><div class="lb-empty">The Race shows everyone’s scores once you’re playing on the 7 Sips website.</div></div>'; return; }
+  if (!isLive()) { m.innerHTML = '<div class="lb"><div class="lb-empty">The race opens Monday, Nov 23.</div></div>'; return; }
+  const wk = monOf(TODAY), seq = ++raceSeq;
+  race.week = cloud.board[wk] || null; race.last = cloud.board[addDays(wk, -7)] || null; race.season = cloud.board.season || null;
+  m.innerHTML = raceHtml(race);
   try {
-    const rows = await cloudBoard(wk, fresh); let lastRows = null;
-    try { lastRows = await cloudBoard(addDays(wk, -7)); } catch (e) {}
-    if (seq === lbSeq && $('lbMount')) $('lbMount').innerHTML = lbHtml(rows, lastRows);
-  } catch (e) { if (seq === lbSeq && $('lbMount') && !cloud.board[wk]) $('lbMount').innerHTML = ''; }
+    const [a, b, c] = await Promise.all([cloudBoard(wk, fresh), cloudBoard(addDays(wk, -7)).catch(() => null), cloudSeason(fresh).catch(() => null)]);
+    if (seq !== raceSeq || activeTab !== 'race') return;
+    race.week = a; race.last = b; race.season = c; $('raceMount').innerHTML = raceHtml(race);
+  } catch (e) {
+    if (seq === raceSeq && activeTab === 'race' && !race.week) $('raceMount').innerHTML = '<div class="lb"><div class="lb-empty">Can’t reach the standings right now. Your scores are safe and will show up when you’re back online.</div></div>';
+  }
 }
-{ const _dwc = drawWeekCard; drawWeekCard = function () { const r = _dwc.apply(this, arguments); try { drawBoard(false); } catch (e) {} return r; }; }
 { const _ar = afterRace; afterRace = async function () {
     const r = await _ar.apply(this, arguments);
-    try { await cloudPushWeek(monOf(TODAY)); cloudMark(); await drawBoard(true); } catch (e) {}
+    try { await cloudPushWeek(monOf(TODAY)); delete cloud.boardAt.season; cloudMark(); } catch (e) {}
     return r;
   }; }
 
@@ -7533,11 +7566,11 @@ async function cloudBoot() {
     try { await cloudPushWeek(addDays(wk, -7)); } catch (e) {}
     await cloudPushWeek(wk);
     await cloudCheckTrophy();
-    if (activeTab === 'play') drawBoard(true);
+    if (activeTab === 'race') drawRace(true);
   } catch (e) { cloud.failing = true; cloudStatusPaint(); }
 }
 { const _ea = enterApp; enterApp = function () { const r = _ea.apply(this, arguments); setTimeout(cloudBoot, 300); return r; }; }
 if (ME && ME.onboarded) setTimeout(cloudBoot, 300);
-setInterval(() => { if (CLOUD_ON && ME && !document.hidden && activeTab === 'play') drawBoard(false); }, 90000);
+setInterval(() => { if (CLOUD_ON && ME && !document.hidden && activeTab === 'race') drawRace(true); }, 90000);
 
 </script></body></html>
