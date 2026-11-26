@@ -373,6 +373,43 @@
 .rc-champ small { display:block; font-size:12px; color:#B5541E; }
 .rc-sub { font-size:12.5px; color:#6B4A2E; margin-top:2px; }
 .ss-tr { font-size:13px; color:var(--ink,#2B1A0F); }
+/* Updated line + pull to refresh */
+.upd { font-size:12.5px; color:var(--ink-dim,#94806A); margin:-4px 0 10px; min-height:18px; }
+.upd-btn { border:0; background:none; padding:6px 2px; min-height:32px; color:#B5541E; font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; }
+.ptr { position:fixed; top:6px; left:50%; transform:translate(-50%,0); opacity:0; z-index:60; pointer-events:none; background:#2B1A0F; color:#FFF6E5; font-size:13px; font-weight:600; padding:7px 14px; border-radius:999px; transition:opacity .2s, transform .2s; }
+html.no-ptr, html.no-ptr body { overscroll-behavior-y:contain; }
+/* Profile: moving phones */
+details.mv summary { cursor:pointer; font-weight:700; font-size:15px; min-height:44px; display:flex; align-items:center; }
+details.mv .mv-p { margin:4px 0 8px; }
+/* Owner insights */
+.in-open { width:100%; margin:0 0 12px; }
+.in-top { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+.in-top .upd { margin:0; text-align:right; }
+.in-back { min-height:44px; padding:0 14px; width:auto; }
+.in-note { font-size:13px; color:var(--ink-dim,#94806A); margin:-4px 0 10px; }
+.in-tiles { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:12px; }
+.in-tile { padding:10px 12px; border-radius:12px; background:rgba(255,253,246,.9); border:1px solid var(--line,rgba(74,56,38,.13)); }
+.in-tile b { display:block; font-size:24px; line-height:1.1; }
+.in-tile span { font-size:12.5px; color:var(--ink-dim,#94806A); }
+.in-sec { margin:0 0 12px; padding:12px; border-radius:14px; background:rgba(255,253,246,.9); border:1px solid var(--line,rgba(74,56,38,.13)); }
+.in-sec h3 { margin:0 0 8px; font-size:15px; }
+.in-bars { display:flex; align-items:flex-end; gap:3px; height:96px; }
+.in-bar { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; min-width:0; }
+.in-bar i { display:block; width:100%; background:#FF5A36; border-radius:4px 4px 0 0; min-height:2px; }
+.in-bar b { font-size:10.5px; margin-top:2px; } .in-bar span { font-size:10.5px; color:var(--ink-dim,#94806A); }
+.in-p { padding:8px 0; } .in-p + .in-p { border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.in-p1 { display:flex; align-items:center; justify-content:space-between; gap:8px; } .in-p1 b { font-size:15px; }
+.in-p2 { font-size:12.5px; color:#5A4532; margin-top:2px; }
+.in-pill { font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; }
+.in-pill.ok { background:#DDF1DF; color:#22582C; } .in-pill.mid { background:#FFF0C9; color:#7A5410; } .in-pill.bad { background:#FBDCD3; color:#9A2D14; } .in-pill.dim { background:#EEE7DC; color:#6B5A48; }
+.in-tbl { width:100%; border-collapse:collapse; font-size:12.5px; }
+.in-tbl th { text-align:left; font-size:11.5px; color:var(--ink-dim,#94806A); font-weight:600; padding:4px 3px; }
+.in-tbl td { padding:6px 3px; border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.in-tbl td:not(:first-child), .in-tbl th:not(:first-child) { text-align:right; width:38px; }
+.in-fb { padding:8px 0; } .in-fb + .in-fb { border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.in-fb1 { font-size:12.5px; color:var(--ink-dim,#94806A); } .in-fb1 b { color:var(--ink,#2B1A0F); }
+.in-fb2 { font-size:14.5px; margin:3px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.in-fb3 { font-size:11.5px; color:var(--ink-dim,#94806A); }
 </style></head><body><div style="position:sticky;top:0;z-index:999;background:#0B0D12;color:#FFC24B;font:600 12.5px system-ui;text-align:center;padding:6px">PREVIEW · test copy · separate save and test leaderboard</div><div class="wrap" id="app">
 <header class="app-hd">
   <div class="hd-row"><div class="brand"><svg class="wl-logo" viewBox="0 0 1024 1024" width="30" height="30" role="img" aria-label="Wakeline Media"><defs><linearGradient id="wlSunH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1B8"/><stop offset="1" stop-color="#FFC24B"/></linearGradient></defs><rect width="1024" height="1024" rx="230" fill="#FF5A36"/><polyline class="wl-line" points="200,430 318,700 440,470 560,700 700,330" fill="none" stroke="#0B0D12" stroke-width="70" stroke-linejoin="round" stroke-linecap="round"/><circle class="wl-sun" cx="790" cy="236" r="92" fill="url(#wlSunH)"/></svg><span class="wm7">7 Sips</span><span class="beta-tag">Beta</span></div><div id="hdMe"></div></div>
@@ -7572,5 +7609,195 @@ async function cloudBoot() {
 { const _ea = enterApp; enterApp = function () { const r = _ea.apply(this, arguments); setTimeout(cloudBoot, 300); return r; }; }
 if (ME && ME.onboarded) setTimeout(cloudBoot, 300);
 setInterval(() => { if (CLOUD_ON && ME && !document.hidden && activeTab === 'race') drawRace(true); }, 90000);
+
+// ---------------- Nov 26 (pm): owner Insights, feedback to the cloud, cleaner Profile, pull to refresh ----------------
+// Live game: the cleanup starts Mon Nov 30 (Text my week) and Mon Dec 7 (trophy codes). The Preview shows it now.
+const CLEAN_FROM = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-11-30';
+const CODES_UNTIL = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-12-07';
+const cleaned = () => CLOUD_ON && TODAY >= CLEAN_FROM;
+
+// ---- 1) "Your week" no longer asks players to text anyone ----
+{ const _wch = weekCardHtml; weekCardHtml = function (id, opts) {
+    if (!cleaned()) return _wch.apply(this, arguments);
+    opts = opts || {}; const r = weekReport(monOf(TODAY));
+    return '<div class="wk-card' + (opts.hi ? ' hi' : '') + '"><div class="wk-h">' + (opts.title || 'Your week') + '</div>' +
+      '<div class="wk-sub">' + (opts.sub ? escH(opts.sub) + ' ' : '') + '<b>' + r.tot + '</b> of 70 · played ' + r.played + ' of 7. Your points go to the Race tab automatically.</div></div>';
+  }; }
+{ const _sn = showNote; showNote = function (id) { if (id === 'sun' && cleaned()) return; return _sn.apply(this, arguments); }; }
+
+// ---- 2) feedback goes straight to Griffin through the cloud (falls back to copy-and-text if offline) ----
+function feedbackRow(msg) {
+  const dk = TODAY, g = raceGameOf(dk), wk = (personal['fs-week:' + monOf(dk)] || { days: {} }).days || {}, day = wk[dk];
+  const ua = (navigator.userAgent.match(/(iPhone|iPad|Android|Mac|Windows)/) || ['phone'])[0];
+  return { env: CLOUD_ENV, pid: ME.pid, name: String(ME.name || '').slice(0, 20), day: dk, game: String(titleOf(g) || '').slice(0, 40),
+    score: day ? day.points + ' pts' : 'not played', device: ua, message: String(msg).trim().slice(0, 1000) };
+}
+async function sendFeedback(msg) {
+  const t = await cloudToken();
+  await cloudApi('/rest/v1/feedback', { method: 'POST', auth: t, prefer: 'return=minimal', body: feedbackRow(msg) });
+}
+
+// ---- 3) owner: unlock once with the owner code, then an Insights screen opens from Profile ----
+let ownerKnown = null;
+async function cloudIsOwner() {
+  if (!CLOUD_ON || !ME) return false;
+  if (ownerKnown !== null) return ownerKnown;
+  try { const t = await cloudToken(); ownerKnown = (await cloudApi('/rest/v1/rpc/is_owner', { method: 'POST', auth: t, body: {} })) === true; } catch (e) { return false; }
+  return ownerKnown;
+}
+function gameNameForDow(i) { try { return titleOf(raceGameOf(addDays(monOf(TODAY), i - 1))); } catch (e) { return DAY3[i - 1]; } }
+function agoText(iso) {
+  if (!iso) return 'never';
+  const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  return m < 2 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' hr ago' : Math.round(m / 1440) + ' days ago';
+}
+const STATUS = { today: ['Played today', 'ok'], active: ['Active this week', 'mid'], slipping: ['Slipping', 'bad'], idle: ['Not this week', 'dim'] };
+function insightsHtml(j) {
+  const s = j.summary || {}, tr = j.trend || [], mx = Math.max(1, ...tr.map(x => x.players));
+  let h = '<div class="in-tiles">' +
+    [['Players', s.players || 0], ['Played today', s.today || 0], ['Played this week', s.this_week || 0], ['Avg week pts', s.avg_week == null ? '–' : s.avg_week]]
+      .map(x => '<div class="in-tile"><b>' + escH(String(x[1])) + '</b><span>' + x[0] + '</span></div>').join('') + '</div>';
+  h += '<section class="in-sec"><h3>Players per day · last 14 days</h3><div class="in-bars" role="img" aria-label="Players per day for the last 14 days">' +
+    tr.map(x => '<div class="in-bar"><i style="height:' + Math.round(100 * x.players / mx) + '%"></i><b>' + x.players + '</b><span>' + escH(DAY3[(dowOf(x.day) + 6) % 7].slice(0, 1)) + '</span></div>').join('') + '</div></section>';
+  h += '<section class="in-sec"><h3>Players</h3>' + ((j.players || []).length ? '<div class="in-list">' + j.players.map(p => {
+    const st = STATUS[p.status] || STATUS.idle;
+    return '<div class="in-p"><div class="in-p1"><b>' + escH(p.name || '?') + '</b><span class="in-pill ' + st[1] + '">' + st[0] + '</span></div>' +
+      '<div class="in-p2">This week <b>' + p.this_tot + '</b> pts · ' + p.this_days + ' of 7 days · Last week ' + p.last_tot + '</div>' +
+      '<div class="in-p2">Streak ' + (p.streak == null ? '–' : p.streak) + (p.best ? ' (best ' + p.best + ')' : '') + ' · 🏆 ' + (p.trophies || 0) + ' · Last seen ' + agoText(p.last_seen) + '</div></div>';
+  }).join('') + '</div>' : '<div class="lb-empty">No players yet.</div>') + '</section>';
+  const g = {}; (j.games || []).forEach(x => g[x.i] = x);
+  h += '<section class="in-sec"><h3>Games · average score (0–10)</h3><table class="in-tbl"><thead><tr><th>Game</th><th>Avg</th><th>Plays</th><th>10s</th><th>0s</th></tr></thead><tbody>' +
+    [1, 2, 3, 4, 5, 6, 7].map(i => { const x = g[i]; return '<tr><td>' + DAY3[i - 1] + ' · ' + escH(gameNameForDow(i)) + '</td><td>' + (x ? x.avg : '–') + '</td><td>' + (x ? x.plays : 0) + '</td><td>' + (x ? x.tens : 0) + '</td><td>' + (x ? x.zeros : 0) + '</td></tr>'; }).join('') +
+    '</tbody></table><div class="lb-foot">Bonus: Seven Across avg ' + (j.bonus && j.bonus.sa_avg != null ? j.bonus.sa_avg + '/6' : '–') + ' (' + ((j.bonus && j.bonus.sa_n) || 0) + ' weeks) · Glide Path avg ' + (j.bonus && j.bonus.gp_avg != null ? j.bonus.gp_avg + '/7' : '–') + ' (' + ((j.bonus && j.bonus.gp_n) || 0) + ' weeks)</div></section>';
+  h += '<section class="in-sec"><h3>Feedback inbox</h3>' + ((j.feedback || []).length ? j.feedback.map(f =>
+    '<div class="in-fb"><div class="in-fb1"><b>' + escH(f.name || '?') + '</b> · ' + escH(agoText(f.at)) + '</div><div class="in-fb2">' + escH(f.message) + '</div>' +
+    '<div class="in-fb3">' + escH([f.day, f.game, f.score, f.device].filter(Boolean).join(' · ')) + '</div></div>').join('') : '<div class="lb-empty">No feedback yet.</div>') + '</section>';
+  return h;
+}
+let insSeq = 0;
+async function drawInsights() {
+  const m = $('insMount'); if (!m) return; const seq = ++insSeq;
+  if (!m.innerHTML) m.innerHTML = '<div class="lb-empty">Loading insights…</div>';
+  try {
+    const t = await cloudToken();
+    const j = await cloudApi('/rest/v1/rpc/owner_insights', { method: 'POST', auth: t, body: { p_env: CLOUD_ENV } });
+    if (seq === insSeq) { m.innerHTML = insightsHtml(j || {}); stampUpdated('insUpd'); }
+  } catch (e) { if (seq === insSeq) m.innerHTML = '<div class="lb-empty">' + (e.status === 403 ? 'Owner only.' : 'Can’t reach the cloud right now. Pull down to try again.') + '</div>'; }
+}
+function openInsights() {
+  if (!$('insightsView')) {
+    $('profileView').insertAdjacentHTML('afterend', '<section id="insightsView" aria-label="Owner insights" hidden><div class="in-top"><button type="button" class="btn sec in-back" id="insBack">‹ Profile</button>' +
+      '<span class="upd" id="insUpd" aria-live="polite"></span></div><h2 class="vw-h">Owner insights</h2><p class="in-note">Only you can see this. ' + (CLOUD_ENV === 'test' ? 'Showing Preview (test) players.' : 'Showing live players.') + '</p><div id="insMount"></div></section>');
+    $('insBack').onclick = () => showTab('profile');
+  }
+  ['play', 'race', 'profile', 'badges', 'shop'].forEach(x => { $(x + 'View').hidden = true; const b = $('tab-' + x); b.classList.remove('on'); b.setAttribute('aria-current', 'false'); });
+  activeTab = 'insights'; $('insightsView').hidden = false;
+  try { window.scrollTo({ top: 0 }); } catch (e) {}
+  drawInsights();
+}
+{ const _st = showTab; showTab = function (t) { const v = $('insightsView'); if (v) v.hidden = true; return _st.apply(this, arguments); }; }
+
+// ---- 4) cleaner bottom of Profile ----
+{ const _dp5 = drawProfile; drawProfile = function () {
+    const r = _dp5.apply(this, arguments);
+    try {
+      const x = $('profileExtra');
+      // trophy codes: only while week 1's trophy is still being handed out
+      const tr = $('trH'); if (tr && CLOUD_ON && TODAY >= CODES_UNTIL) tr.closest('section').remove();
+      if (cleaned()) {
+        // backup: folded into "Moving to a new phone?"
+        const bk = $('bkH') && $('bkH').closest('section');
+        if (bk && !$('mvPhone')) {
+          const st = $('cloudStat'); if (st) bk.before(st);
+          const d = document.createElement('details'); d.className = 'bk mv'; d.id = 'mvPhone';
+          d.innerHTML = '<summary>Moving to a new phone?</summary><p class="mv-p">Your progress is saved to the cloud automatically. To move it to a new phone, copy your backup code here, then open 7 Sips on the new phone and restore it.</p>';
+          bk.querySelector('p') && bk.querySelector('p').remove(); bk.querySelector('#bkH') && bk.querySelector('#bkH').remove();
+          bk.classList.remove('bk'); d.appendChild(bk); x.appendChild(d);
+        }
+        // feedback: send straight to Griffin
+        const fb = $('fbSec');
+        if (fb) {
+          fb.querySelector('p').textContent = 'Found a bug, a typo or have an idea? Send it straight to Griffin. Today’s game and your score are added for you.';
+          const go = $('fbGo'); go.textContent = 'Send to Griffin';
+          go.onclick = async () => {
+            const v = $('fbIn').value, box = $('cpFb');
+            if (!v.trim()) { box.innerHTML = '<div class="ob-err" role="alert">Write a line about what happened first.</div>'; return; }
+            go.disabled = true; box.innerHTML = '<div class="ob-ok">Sending…</div>';
+            try { await sendFeedback(v); $('fbIn').value = ''; box.innerHTML = '<div class="ob-ok" role="status">Sent! Thanks, Griffin reads every one.</div>'; }
+            catch (e) { copyFlow(feedbackText(v), box, 'Couldn’t send right now, so it’s copied instead. Paste it in a text to Griffin.'); }
+            go.disabled = false;
+          };
+          x.appendChild(fb);                         // feedback sits below "Your name", above "Moving to a new phone?"
+          const mv = $('mvPhone'); if (mv) x.appendChild(mv);
+        }
+      }
+      // owner: unlock form (only with #owner in the link) or the Insights button
+      if (CLOUD_ON) cloudIsOwner().then(own => {
+        if (!$('profileExtra') || activeTab !== 'profile') return;
+        if (own && !$('insOpen')) { $('profileExtra').insertAdjacentHTML('afterbegin', '<button type="button" class="btn in-open" id="insOpen">📊 Owner insights</button>'); $('insOpen').onclick = openInsights; }
+        else if (!own && /owner/.test(location.hash) && !$('ownSec')) {
+          $('profileExtra').insertAdjacentHTML('afterbegin', '<section class="bk" id="ownSec"><h3>Owner sign-in</h3><label class="ob-lab" for="ownIn">Owner code</label><input id="ownIn" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="WAKE-…"><div class="ob-err" id="ownErr" role="alert"></div><button type="button" class="btn" id="ownGo">Unlock insights</button></section>');
+          $('ownGo').onclick = async () => {
+            const e = $('ownErr'); e.className = 'ob-err'; e.textContent = 'Checking…';
+            try { const t = await cloudToken(); const ok = await cloudApi('/rest/v1/rpc/claim_owner', { method: 'POST', auth: t, body: { p_code: $('ownIn').value } });
+              if (ok === true) { ownerKnown = true; try { history.replaceState(null, '', location.pathname + location.search); } catch (er) {} drawProfile(); } else e.textContent = 'That code didn’t work.'; }
+            catch (er) { e.textContent = 'Can’t reach the cloud right now.'; }
+          };
+        }
+      });
+    } catch (e) {}
+    return r;
+  }; }
+
+// ---- 5) Race tab + Insights: "Updated just now" and pull down to refresh ----
+const updAt = {};
+function stampUpdated(id) { updAt[id] = Date.now(); paintUpdated(); }
+function paintUpdated() {
+  Object.keys(updAt).forEach(id => { const el = $(id); if (!el) return; const s = Math.round((Date.now() - updAt[id]) / 1000);
+    el.innerHTML = 'Updated ' + (s < 10 ? 'just now' : s < 60 ? s + 's ago' : Math.round(s / 60) + ' min ago') + ' · <button type="button" class="upd-btn" data-refresh="' + id + '">Refresh</button>'; });
+}
+setInterval(paintUpdated, 10000);
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-refresh]'); if (!b) return; b.dataset.refresh === 'insUpd' ? drawInsights() : drawRace(true); });
+{ const _dr = drawRace; drawRace = async function () {
+    const v = $('raceView'); if (v && !$('raceUpd')) v.querySelector('.vw-h').insertAdjacentHTML('afterend', '<div class="upd" id="raceUpd" aria-live="polite"></div>');
+    const r = await _dr.apply(this, arguments);
+    if (CLOUD_ON && activeTab === 'race' && $('raceMount') && $('raceMount').querySelector('.lb-list, .lb-empty')) stampUpdated('raceUpd');
+    return r;
+  }; }
+(function pullToRefresh() {
+  let y0 = null, pulling = false, ind = null;
+  const view = () => activeTab === 'race' ? 'race' : activeTab === 'insights' ? 'insights' : null;
+  function indicator() { if (!ind) { ind = document.createElement('div'); ind.className = 'ptr'; ind.setAttribute('aria-hidden', 'true'); document.body.appendChild(ind); } return ind; }
+  document.addEventListener('touchstart', e => { y0 = (view() && window.scrollY <= 0 && e.touches.length === 1) ? e.touches[0].clientY : null; pulling = false; }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (y0 == null) return; const dy = e.touches[0].clientY - y0; if (dy <= 0) return;
+    const i = indicator(); i.style.transform = 'translate(-50%,' + Math.min(70, dy / 2) + 'px)'; i.style.opacity = Math.min(1, dy / 120);
+    pulling = dy > 110; i.textContent = pulling ? '↻ Release to refresh' : '↓ Pull to refresh';
+  }, { passive: true });
+  document.addEventListener('touchend', () => {
+    if (y0 == null) return; y0 = null; const i = indicator();
+    if (pulling) { i.textContent = 'Refreshing…'; (view() === 'insights' ? drawInsights() : drawRace(true)).then(() => { i.style.opacity = 0; i.style.transform = 'translate(-50%,0)'; }); }
+    else { i.style.opacity = 0; i.style.transform = 'translate(-50%,0)'; }
+    pulling = false;
+  });
+  // stop Safari's own pull-to-reload on these two screens, so pulling refreshes the standings instead of reloading the game
+  { const _st2 = showTab; showTab = function (t) { const r = _st2.apply(this, arguments); document.documentElement.classList.toggle('no-ptr', t === 'race'); return r; }; }
+  { const _oi = openInsights; openInsights = function () { const r = _oi.apply(this, arguments); document.documentElement.classList.add('no-ptr'); return r; }; }
+})();
+
+// ---- 6) old "phone only / texts him" wording, updated for the cloud ----
+const COPY_FIX = [
+  ['During the beta, Griffin runs the race from the weeks everyone texts him.', 'Scores go to the Race tab automatically, and the weekly winner’s trophy appears on its own.'],
+  ['Your progress is saved on this phone only. Badges', 'Your progress is saved on this phone and backed up to the cloud. Badges'],
+  ['Your progress is saved on this phone only. There’s no account and nothing to download.', 'Your progress saves automatically. No email, no password and nothing to download.']
+];
+function fixCopy(root) {
+  if (!cleaned() || !root) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+  while ((n = w.nextNode())) COPY_FIX.forEach(f => { if (n.nodeValue.indexOf(f[0]) >= 0) n.nodeValue = n.nodeValue.split(f[0]).join(f[1]); });
+}
+{ const _dp6 = drawProfile; drawProfile = function () { const r = _dp6.apply(this, arguments); try { fixCopy($('profileView')); } catch (e) {} return r; }; }
+{ const _so = showOnboarding; showOnboarding = function () { const r = _so.apply(this, arguments); try { fixCopy(document.body); } catch (e) {} return r; }; }
+try { fixCopy(document.body); } catch (e) {}
 
 </script></body></html>
