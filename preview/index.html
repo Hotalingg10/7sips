@@ -3857,7 +3857,8 @@ function pickTriviaDay(list, dateKeyStr, gameSeed) {
     var btn = mount.querySelector('#infoBtn'), pop = mount.querySelector('#infoPop'), shell = mount.parentNode;
     if (shell && shell.classList) shell.classList.toggle('howfirst', !seen);
     function setOpen(o) { pop.hidden = !o; btn.setAttribute('aria-expanded', String(o)); if (o) { btn.classList.remove('first'); if (shell && shell.classList) shell.classList.remove('howfirst'); try { localStorage.setItem('sips:prev:howseen:' + gameKey, '1'); } catch (e) {} } }
-    btn.onclick = function (e) { e.stopPropagation(); setOpen(pop.hidden); };
+    var pd = 0; btn.addEventListener('pointerdown', function () { pd = Date.now(); });
+    btn.onclick = function (e) { e.stopPropagation(); if (e.detail !== 0 && Date.now() - pd > 1500) return; setOpen(pop.hidden); };   // Nov 27: only a tap that started on the button (a finger left on the screen after a reload was opening it)
     mount.querySelector('#infoX').onclick = function () { setOpen(false); btn.focus(); };
     pop.addEventListener('click', function (e) { e.stopPropagation(); });
     if (global.__sipsInfoDoc) { document.removeEventListener('click', global.__sipsInfoDoc); document.removeEventListener('keydown', global.__sipsInfoKey); }
@@ -7779,9 +7780,10 @@ document.addEventListener('click', e => { const b = e.target.closest && e.target
   document.addEventListener('touchstart', e => { y0 = (view() && window.scrollY <= 0 && e.touches.length === 1) ? e.touches[0].clientY : null; pulling = false; }, { passive: true });
   document.addEventListener('touchmove', e => {
     if (y0 == null) return; const dy = e.touches[0].clientY - y0; if (dy <= 0) return;
+    if (window.scrollY <= 0 && e.cancelable) e.preventDefault();   // Nov 27: stops Safari's own pull-to-reload (it reloaded the game onto the Play tab)
     const i = indicator(); i.style.transform = 'translate(-50%,' + Math.min(70, dy / 2) + 'px)'; i.style.opacity = Math.min(1, dy / 120);
     pulling = dy > 110; i.textContent = pulling ? '↻ Release to refresh' : '↓ Pull to refresh';
-  }, { passive: true });
+  }, { passive: false });
   document.addEventListener('touchend', () => {
     if (y0 == null) return; y0 = null; const i = indicator();
     if (pulling) { i.textContent = 'Refreshing…'; (view() === 'insights' ? drawInsights() : drawRace(true)).then(() => { i.style.opacity = 0; i.style.transform = 'translate(-50%,0)'; }); }
@@ -7901,5 +7903,13 @@ function maybeNameNote() {
 }
 { const _ea2 = enterApp; enterApp = function () { const r = _ea2.apply(this, arguments); setTimeout(maybeNameNote, 0); return r; }; }
 try { maybeNameNote(); } catch (e) {}
+
+// ---- Nov 27: a reload keeps you on the tab you were on (it always jumped back to Play) ----
+{ const _st3 = showTab; showTab = function (t) { const r = _st3.apply(this, arguments); try { sessionStorage.setItem('sips-tab', t + '|' + TODAY); } catch (e) {} return r; }; }
+function restoreTab() {
+  let t = null; try { const v = (sessionStorage.getItem('sips-tab') || '').split('|'); if (v[1] === TODAY) t = v[0]; } catch (e) {}   // a new day starts on Play
+  if (ME && ME.onboarded && t && t !== 'play' && ['race', 'profile', 'badges', 'shop'].indexOf(t) >= 0 && $(t + 'View') && activeTab !== t) showTab(t);
+}
+try { restoreTab(); } catch (e) {}
 
 </script></body></html>
