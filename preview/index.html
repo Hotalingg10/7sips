@@ -7428,7 +7428,7 @@ function winterArt() {
 const CLOUD_URL = 'https://siwxwmtljtewfvtclwni.supabase.co', CLOUD_KEY = 'sb_publishable_yxFwW49xjLkTfDrrEfMwIQ_FCqFqy7V';
 const CLOUD_ENV = 'test';
 const CLOUD_SK = 'sips-cloud-' + CLOUD_ENV;                 // session lives outside the save, so backups never carry it
-const AUTO_TROPHY_FROM = '2026-11-30';                       // week 1 (Nov 23-29) is settled by Griffin's tracker
+const AUTO_TROPHY_FROM = '2026-11-23';                       // Nov 27: week 1 is automatic too (trophy codes stay as a backup until Dec 7)
 const CLOUD_ON = (function () { try { return /github\.io$/.test(location.hostname) || localStorage.getItem('sips-cloud-force') === '1'; } catch (e) { return false; } })();
 const cloud = { lastSaved: 0, board: {}, boardAt: {}, failing: false };
 
@@ -7620,8 +7620,8 @@ if (ME && ME.onboarded) setTimeout(cloudBoot, 300);
 setInterval(() => { if (CLOUD_ON && ME && !document.hidden && activeTab === 'race') drawRace(true); }, 90000);
 
 // ---------------- Nov 26 (pm): owner Insights, feedback to the cloud, cleaner Profile, pull to refresh ----------------
-// Live game: the cleanup starts Mon Nov 30 (Text my week) and Mon Dec 7 (trophy codes). The Preview shows it now.
-const CLEAN_FROM = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-11-30';
+// Live game: the cleanup starts Fri Nov 27 (cloud go-live) and Mon Dec 7 (trophy codes).
+const CLEAN_FROM = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-11-27';   // Nov 27: live went cloud today
 const CODES_UNTIL = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-12-07';
 const cleaned = () => CLOUD_ON && TODAY >= CLEAN_FROM;
 

@@ -241,7 +241,8 @@
   .game-shell.howfirst #game .gd-card-label:first-child, .game-shell.howfirst #game > .gd-card-label { padding-right:132px; }
   .game-shell #game .br-fine { margin-right:40px; } .game-shell.howfirst #game .br-fine { margin-right:128px; }
   /* Badges tab + filters */
-  .tabs { grid-template-columns:repeat(4,1fr); gap:5px; } .tabs button { font-size:14px; padding:0 2px; }
+  .tabs { grid-template-columns:repeat(5,1fr); gap:4px; } .tabs button { font-size:13.5px; padding:0 1px; }
+  @media (max-width:350px) { .tabs button { font-size:12.5px; } }
   .flt { display:flex; gap:6px; overflow-x:auto; padding:2px 16px 8px; margin:0 -16px 6px; scrollbar-width:none; -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity; }
   .flt::-webkit-scrollbar { display:none; }
   .flt-chip { flex:none; min-height:44px; padding:0 13px; border-radius:999px; border:1px solid var(--line); background:#FFFDF6; color:var(--ink); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; scroll-snap-align:center; }
@@ -341,12 +342,88 @@
   @keyframes wlTwinkle { 50% { opacity:.35; } }
   @keyframes wlSnow { 0% { transform:translateY(-12px); opacity:0; } 15% { opacity:.9; } 100% { transform:translateY(70px); opacity:0; } }
   @media (prefers-reduced-motion: reduce) { .season-band.winter .wb, .season-band.winter .wf { animation:none; } }
+/* Nov 26: live leaderboard + cloud save line */
+.lb { margin:12px 0 4px; padding:12px; border-radius:14px; border:1px solid var(--line,rgba(74,56,38,.13)); background:rgba(255,253,246,.86); }
+.lb-top h3 { margin:0; font-size:16px; }
+.lb-sub { display:block; font-size:12px; color:var(--ink-dim,#94806A); margin-top:2px; }
+.lb-list { list-style:none; margin:10px 0 0; padding:0; }
+.lb-row { display:flex; align-items:center; gap:10px; padding:7px 6px; border-radius:10px; min-height:44px; }
+.lb-row + .lb-row { border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.lb-row.me { background:rgba(255,90,54,.10); box-shadow:inset 0 0 0 1px rgba(255,90,54,.35); }
+.lb-rk { width:26px; text-align:center; font-weight:700; font-size:15px; flex:none; }
+.lb-mug { width:34px; height:34px; flex:none; display:block; }
+.lb-mug svg { display:block; }
+.lb-nm { flex:1; min-width:0; }
+.lb-nm b { display:block; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lb-nm b i { font-style:normal; font-weight:400; color:var(--ink-dim,#94806A); font-size:12.5px; }
+.lb-nm small { display:block; font-size:12px; color:#B5541E; margin-top:1px; }
+.lb-pts { flex:none; font-size:13px; color:var(--ink-dim,#94806A); }
+.lb-pts b { font-size:17px; color:var(--ink,#2B1A0F); }
+.lb-gap { text-align:center; color:var(--ink-dim,#94806A); padding:2px 0; }
+.lb-empty, .lb-foot { font-size:12.5px; color:var(--ink-dim,#94806A); margin-top:8px; }
+.lb-last { margin-top:10px; padding:8px 10px; border-radius:10px; background:rgba(230,190,85,.18); font-size:13px; }
+.cloud-stat { font-size:13px; color:#2F6B3A; margin:4px 0 8px; }
+/* Race tab */
+#raceView .lb { margin-top:0; margin-bottom:12px; }
+.rc-champ { display:flex; gap:12px; align-items:center; margin:0 0 12px; padding:12px; border-radius:14px; border:1px solid rgba(181,84,30,.35); background:linear-gradient(135deg,#FFF1C9,#F6D58A); }
+.rc-champ-mug { width:64px; height:64px; flex:none; }
+.rc-champ-mug svg { display:block; }
+.rc-k { font-size:12px; font-weight:700; letter-spacing:.02em; color:#8A3E12; }
+.rc-champ b { display:block; font-size:19px; margin-top:2px; }
+.rc-champ small { display:block; font-size:12px; color:#B5541E; }
+.rc-sub { font-size:12.5px; color:#6B4A2E; margin-top:2px; }
+.ss-tr { font-size:13px; color:var(--ink,#2B1A0F); }
+/* Updated line + pull to refresh */
+.upd { font-size:12.5px; color:var(--ink-dim,#94806A); margin:-4px 0 10px; min-height:18px; }
+.upd-btn { border:0; background:none; padding:6px 2px; min-height:32px; color:#B5541E; font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; }
+.ptr { position:fixed; top:6px; left:50%; transform:translate(-50%,0); opacity:0; z-index:60; pointer-events:none; background:#2B1A0F; color:#FFF6E5; font-size:13px; font-weight:600; padding:7px 14px; border-radius:999px; transition:opacity .2s, transform .2s; }
+html.no-ptr, html.no-ptr body { overscroll-behavior-y:contain; }
+/* Profile: moving phones */
+details.mv summary { cursor:pointer; font-weight:700; font-size:15px; min-height:44px; display:flex; align-items:center; }
+details.mv .mv-p { margin:4px 0 8px; }
+/* Owner insights */
+.in-open { width:100%; margin:0 0 12px; }
+.in-top { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+.in-top .upd { margin:0; text-align:right; }
+.in-back { min-height:44px; padding:0 14px; width:auto; }
+.in-note { font-size:13px; color:var(--ink-dim,#94806A); margin:-4px 0 10px; }
+.in-tiles { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:12px; }
+.in-tile { padding:10px 12px; border-radius:12px; background:rgba(255,253,246,.9); border:1px solid var(--line,rgba(74,56,38,.13)); }
+.in-tile b { display:block; font-size:24px; line-height:1.1; }
+.in-tile span { font-size:12.5px; color:var(--ink-dim,#94806A); }
+.in-sec { margin:0 0 12px; padding:12px; border-radius:14px; background:rgba(255,253,246,.9); border:1px solid var(--line,rgba(74,56,38,.13)); }
+.in-sec h3 { margin:0 0 8px; font-size:15px; }
+.in-bars { display:flex; align-items:flex-end; gap:3px; height:96px; }
+.in-bar { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; min-width:0; }
+.in-bar i { display:block; width:100%; background:#FF5A36; border-radius:4px 4px 0 0; min-height:2px; }
+.in-bar b { font-size:10.5px; margin-top:2px; } .in-bar span { font-size:10.5px; color:var(--ink-dim,#94806A); }
+.in-p { padding:8px 0; } .in-p + .in-p { border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.in-p1 { display:flex; align-items:center; justify-content:space-between; gap:8px; } .in-p1 b { font-size:15px; }
+.in-p2 { font-size:12.5px; color:#5A4532; margin-top:2px; }
+.in-pill { font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; }
+.in-pill.ok { background:#DDF1DF; color:#22582C; } .in-pill.mid { background:#FFF0C9; color:#7A5410; } .in-pill.bad { background:#FBDCD3; color:#9A2D14; } .in-pill.dim { background:#EEE7DC; color:#6B5A48; }
+.in-tbl { width:100%; border-collapse:collapse; font-size:12.5px; }
+.in-tbl th { text-align:left; font-size:11.5px; color:var(--ink-dim,#94806A); font-weight:600; padding:4px 3px; }
+.in-tbl td { padding:6px 3px; border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.in-tbl td:not(:first-child), .in-tbl th:not(:first-child) { text-align:right; width:38px; }
+.in-fb { padding:8px 0; } .in-fb + .in-fb { border-top:1px solid var(--line,rgba(74,56,38,.10)); }
+.in-fb1 { font-size:12.5px; color:var(--ink-dim,#94806A); } .in-fb1 b { color:var(--ink,#2B1A0F); }
+.in-fb2 { font-size:14.5px; margin:3px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+.in-fb3 { font-size:11.5px; color:var(--ink-dim,#94806A); }
+/* Daily splash */
+.wl-splash.daily { cursor:pointer; }
+.wl-splash.daily h2 { margin:0; font-size:30px; letter-spacing:.01em; }
+.wl-splash.daily .sp-hol { font-size:18px; font-weight:700; color:#3A1607; opacity:0; animation:wlUp .5s 1.35s ease-out forwards; }
+.wl-splash.daily .sp-day { font-size:15px; font-weight:600; color:#5A3A22; opacity:0; animation:wlUp .5s 1.5s ease-out forwards; }
+.wl-splash.daily .sp-tap { font-size:13px; font-weight:600; color:#4A2410; opacity:0; animation:wlUp .5s 1.9s ease-out forwards; }
+@keyframes wlUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce) { .wl-splash.daily .sp-hol, .wl-splash.daily .sp-day, .wl-splash.daily .sp-tap { animation:none; opacity:1; } }
 </style></head><body><div class="wrap" id="app">
 <header class="app-hd">
   <div class="hd-row"><div class="brand"><svg class="wl-logo" viewBox="0 0 1024 1024" width="30" height="30" role="img" aria-label="Wakeline Media"><defs><linearGradient id="wlSunH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF1B8"/><stop offset="1" stop-color="#FFC24B"/></linearGradient></defs><rect width="1024" height="1024" rx="230" fill="#FF5A36"/><polyline class="wl-line" points="200,430 318,700 440,470 560,700 700,330" fill="none" stroke="#0B0D12" stroke-width="70" stroke-linejoin="round" stroke-linecap="round"/><circle class="wl-sun" cx="790" cy="236" r="92" fill="url(#wlSunH)"/></svg><span class="wm7">7 Sips</span><span class="beta-tag">Beta</span></div><div id="hdMe"></div></div>
   <div class="hd-date" id="hdDate"></div>
 </header>
-<nav class="tabs" id="tabs" aria-label="Main" hidden><button type="button" id="tab-play" class="on" aria-current="page">Play</button><button type="button" id="tab-profile" aria-current="false">Profile</button><button type="button" id="tab-badges" aria-current="false">Badges</button><button type="button" id="tab-shop" aria-current="false">Shop</button></nav>
+<nav class="tabs" id="tabs" aria-label="Main" hidden><button type="button" id="tab-play" class="on" aria-current="page">Play</button><button type="button" id="tab-race" aria-current="false">Race</button><button type="button" id="tab-profile" aria-current="false">Profile</button><button type="button" id="tab-badges" aria-current="false">Badges</button><button type="button" id="tab-shop" aria-current="false">Shop</button></nav>
 <div id="noticeMount"></div>
 <div id="onboard" hidden></div>
 <main id="appMain" hidden>
@@ -361,6 +438,7 @@
 <div id="weekMount"></div>
 <div id="weekCard"></div>
 </section>
+<section id="raceView" aria-label="Race" hidden><h2 class="vw-h">The Race</h2><div id="raceMount"></div></section>
 <section id="profileView" aria-label="Profile" hidden><h2 class="vw-h">Profile</h2><div id="profileMount"></div><div id="profileExtra"></div></section>
 <section id="badgesView" aria-label="Badges" hidden><h2 class="vw-h">Badges</h2><div id="badgesMount"></div></section>
 <section id="shopView" aria-label="Shop" hidden></section>
@@ -3779,7 +3857,8 @@ function pickTriviaDay(list, dateKeyStr, gameSeed) {
     var btn = mount.querySelector('#infoBtn'), pop = mount.querySelector('#infoPop'), shell = mount.parentNode;
     if (shell && shell.classList) shell.classList.toggle('howfirst', !seen);
     function setOpen(o) { pop.hidden = !o; btn.setAttribute('aria-expanded', String(o)); if (o) { btn.classList.remove('first'); if (shell && shell.classList) shell.classList.remove('howfirst'); try { localStorage.setItem('sips:beta:howseen:' + gameKey, '1'); } catch (e) {} } }
-    btn.onclick = function (e) { e.stopPropagation(); setOpen(pop.hidden); };
+    var pd = 0; btn.addEventListener('pointerdown', function () { pd = Date.now(); });
+    btn.onclick = function (e) { e.stopPropagation(); if (e.detail !== 0 && Date.now() - pd > 1500) return; setOpen(pop.hidden); };   // Nov 27: only a tap that started on the button (a finger left on the screen after a reload was opening it)
     mount.querySelector('#infoX').onclick = function () { setOpen(false); btn.focus(); };
     pop.addEventListener('click', function (e) { e.stopPropagation(); });
     if (global.__sipsInfoDoc) { document.removeEventListener('click', global.__sipsInfoDoc); document.removeEventListener('keydown', global.__sipsInfoKey); }
@@ -6903,12 +6982,12 @@ let activeTab = 'play';
 function showTab(t) {
   if (!ME) return;
   activeTab = t;
-  ['play', 'profile', 'badges', 'shop'].forEach(x => {
+  ['play', 'race', 'profile', 'badges', 'shop'].forEach(x => {
     $(x + 'View').hidden = x !== t;
     const b = $('tab-' + x); b.setAttribute('aria-current', x === t ? 'page' : 'false'); b.classList.toggle('on', x === t);
   });
   if (t === 'play') startGame();
-  else { if (typeof clearTriviaTimer === 'function' && T && !T.done) clearTriviaTimer(); if (t === 'profile') drawProfile(); else if (t === 'badges') drawBadges(); else { shopMsg = ''; drawShop(); } }
+  else { if (typeof clearTriviaTimer === 'function' && T && !T.done) clearTriviaTimer(); if (t === 'profile') drawProfile(); else if (t === 'race') drawRace(true); else if (t === 'badges') drawBadges(); else { shopMsg = ''; drawShop(); } }
   drawHeaderDate();
   try { window.scrollTo({ top: 0 }); } catch (e) {}
 }
@@ -6999,6 +7078,7 @@ $('tab-play').onclick = () => showTab('play');
 $('tab-profile').onclick = () => showTab('profile');
 $('tab-shop').onclick = () => showTab('shop');
 $('tab-badges').onclick = () => showTab('badges');
+$('tab-race').onclick = () => showTab('race');
 // Keyboard: game tiles that are not native buttons act like buttons.
 document.addEventListener('keydown', e => {
   const t = e.target; if (!t || !t.getAttribute || t.getAttribute('role') !== 'button' || /^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(t.tagName)) return;
@@ -7339,5 +7419,497 @@ function winterArt() {
     } catch (e) {}
     return r; };
   try { drawSeasonBand(); } catch (e) {} }
+
+// ---------------- Nov 26: cloud saves + live leaderboard + automatic Espresso Trophy ----------------
+// Backend: Supabase project "7sips" (Wakeline Media org). Each phone gets a no-email ("anonymous") account the
+// first time it opens the game. The game still saves to the phone first; the cloud gets a copy a few seconds later.
+// Nothing here can block play: every cloud call is wrapped, and the game works the same offline.
+// The publishable key below is meant to be public; row level security limits each account to its own rows.
+const CLOUD_URL = 'https://siwxwmtljtewfvtclwni.supabase.co', CLOUD_KEY = 'sb_publishable_yxFwW49xjLkTfDrrEfMwIQ_FCqFqy7V';
+const CLOUD_ENV = NS === 'sips:beta:' ? 'live' : 'test';
+const CLOUD_SK = 'sips-cloud-' + CLOUD_ENV;                 // session lives outside the save, so backups never carry it
+const AUTO_TROPHY_FROM = '2026-11-23';                       // Nov 27: week 1 is automatic too (trophy codes stay as a backup until Dec 7)
+const CLOUD_ON = (function () { try { return /github\.io$/.test(location.hostname) || localStorage.getItem('sips-cloud-force') === '1'; } catch (e) { return false; } })();
+const cloud = { lastSaved: 0, board: {}, boardAt: {}, failing: false };
+
+function cloudSess() { try { return JSON.parse(localStorage.getItem(CLOUD_SK) || 'null'); } catch (e) { return null; } }
+function cloudKeep(j) {
+  const s = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600) };
+  try { localStorage.setItem(CLOUD_SK, JSON.stringify(s)); } catch (e) {}
+  return s;
+}
+async function cloudApi(path, o) {
+  o = o || {};
+  const h = { apikey: CLOUD_KEY, 'Content-Type': 'application/json' };
+  if (o.auth) h.Authorization = 'Bearer ' + o.auth;
+  if (o.prefer) h.Prefer = o.prefer;
+  const r = await fetch(CLOUD_URL + path, { method: o.method || 'GET', headers: h, body: o.body ? JSON.stringify(o.body) : undefined, keepalive: !!o.keepalive });
+  const t = await r.text(); let j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+  if (!r.ok) { const e = new Error('cloud ' + r.status); e.status = r.status; throw e; }
+  return j;
+}
+let cloudTokP = null;
+function cloudToken() {
+  if (cloudTokP) return cloudTokP;
+  cloudTokP = (async () => {
+    let s = cloudSess();
+    if (s && s.access_token && s.expires_at > Date.now() / 1000 + 60) return s.access_token;
+    if (s && s.refresh_token) {
+      try { return cloudKeep(await cloudApi('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: s.refresh_token } })).access_token; }
+      catch (e) { if (e.status !== 400 && e.status !== 401 && e.status !== 403) throw e; }   // network trouble: try again later
+    }
+    return cloudKeep(await cloudApi('/auth/v1/signup', { method: 'POST', body: {} })).access_token;
+  })();
+  cloudTokP.then(() => { cloudTokP = null; }, () => { cloudTokP = null; });
+  return cloudTokP;
+}
+
+// ---- what a player shows on the leaderboard: their mug, frame, steam and title (only real Shop values are accepted back) ----
+function myLook() { const l = profileEq(); const t = eqVal('title'); if (t && TITLE_TEXT[t]) l.title = t; return l; }
+function safeLook(l) {
+  const out = {}; if (!l || typeof l !== 'object') return out;
+  ['mug', 'steam', 'frame'].forEach(k => { const v = l[k]; if (typeof v === 'string' && (v === KIND_DEF[k] || COSMETICS.some(x => x.kind === k && x.val === v))) out[k] = v; });
+  return out;
+}
+
+// ---- cloud save (the same key/value map the backup code carries) ----
+let cloudDirty = false, cloudTimer = null;
+function cloudMark() { if (!CLOUD_ON || !ME) return; cloudDirty = true; clearTimeout(cloudTimer); cloudTimer = setTimeout(cloudPushSave, 4000); }
+async function cloudPushSave(leaving) {
+  if (!CLOUD_ON || !ME || !cloudDirty) return;
+  cloudDirty = false; clearTimeout(cloudTimer);
+  try {
+    const data = {}; sKeys().forEach(k => { const v = sGet(k); if (v != null) data[k] = v; });
+    const body = { pid: ME.pid, name: String(ME.name || 'Player').slice(0, 20), data: data, env: CLOUD_ENV, rev: Date.now() };
+    const t = await cloudToken();
+    await cloudApi('/rest/v1/saves?on_conflict=user_id', { method: 'POST', auth: t, prefer: 'resolution=merge-duplicates,return=minimal', body: body, keepalive: !!leaving && JSON.stringify(body).length < 60000 });
+    cloud.lastSaved = Date.now(); cloud.failing = false; cloudStatusPaint();
+  } catch (e) { cloudDirty = true; cloud.failing = true; cloudStatusPaint(); }
+}
+// every change to the save marks it for upload
+{ const _set = sSet, _del = sDel;
+  sSet = function (k, v) { _set(k, v); if (k && k.indexOf(NS) === 0) cloudMark(); };
+  sDel = function (k) { _del(k); if (k && k.indexOf(NS) === 0) cloudMark(); }; }
+document.addEventListener('visibilitychange', () => { if (document.hidden) cloudPushSave(true); });
+window.addEventListener('pagehide', () => cloudPushSave(true));
+
+// ---- this week's (and last week's) points, for the leaderboard ----
+async function cloudPushWeek(wk) {
+  if (!CLOUD_ON || !ME || wk < BETA_START) return;
+  const r = weekReport(wk); if (!r.played) return;
+  const rec = personal['fs-week:' + wk] || { days: {} }; let words = 0;
+  Object.keys(rec.days || {}).forEach(k => { words += Math.max(0, Math.round((rec.days[k] && rec.days[k].words) || 0)); });
+  const t = await cloudToken();
+  await cloudApi('/rest/v1/weeks?on_conflict=user_id,wk', { method: 'POST', auth: t, prefer: 'resolution=merge-duplicates,return=minimal',
+    body: { wk: wk, pid: ME.pid, name: String(ME.name || 'Player').slice(0, 20), d: r.d, tot: r.tot, words: Math.min(999, words), report: r.obj, look: myLook(), env: CLOUD_ENV } });
+  delete cloud.boardAt[wk];
+}
+async function cloudBoard(wk, fresh) {
+  if (!fresh && cloud.board[wk] && Date.now() - (cloud.boardAt[wk] || 0) < 60000) return cloud.board[wk];
+  const t = await cloudToken();
+  const rows = await cloudApi('/rest/v1/rpc/leaderboard', { method: 'POST', auth: t, body: { p_wk: wk, p_env: CLOUD_ENV } });
+  cloud.board[wk] = Array.isArray(rows) ? rows : []; cloud.boardAt[wk] = Date.now();
+  return cloud.board[wk];
+}
+
+// ---- automatic Espresso Trophy: the winner's own phone puts it on their shelf the next time they open the game ----
+async function cloudCheckTrophy() {
+  if (!CLOUD_ON || !ME || !isLive()) return;
+  const last = addDays(monOf(TODAY), -7); if (last < AUTO_TROPHY_FROM) return;
+  const p = profile(); if ((p.trophies || []).some(t => t.weekKey === last)) return;
+  const rows = await cloudBoard(last, true), me = rows.find(r => r.is_me);
+  if (!me || me.rnk !== 1) return;
+  p.weeks = p.weeks || {}; if (p.weeks[last]) p.weeks[last].closed = false;
+  SevenSipsProfile.recordWeekEnd(p, { weekKey: last, total: me.tot, rank: 1 });
+  personal['profile'] = p;
+  const c = cosState(); c.beans = (c.beans || 0) + 100; cosSave(c);
+  try { await cloudPushWeek(last); delete cloud.boardAt.season; } catch (e) {}
+  try { drawHead(); } catch (e) {}
+  try { celebrate(); } catch (e) {}
+  showNote('trophy-' + last, '<b>🏆 You won the Espresso Trophy</b> for the week of ' + escH(fmtShort(last)) + ' with ' + me.tot + ' points! It’s on your café shelf in Profile, plus 100 Beans. See the Race tab.');
+}
+
+// ---- the Race tab: this week, last week's champion, Season's Best Sipper standings ----
+async function cloudSeason(fresh) {
+  const k = 'season'; if (!fresh && cloud.board[k] && Date.now() - (cloud.boardAt[k] || 0) < 60000) return cloud.board[k];
+  const t = await cloudToken();
+  const rows = await cloudApi('/rest/v1/rpc/season_standings', { method: 'POST', auth: t, body: { p_from: SEASON_START, p_to: addDays(SEASON_START, 7 * (SEASON_WEEKS - 1)), p_env: CLOUD_ENV } });
+  cloud.board[k] = Array.isArray(rows) ? rows : []; cloud.boardAt[k] = Date.now();
+  return cloud.board[k];
+}
+function lookOf(r) { return { lk: safeLook(r.look), tt: r.look && TITLE_TEXT[r.look.title] ? TITLE_TEXT[r.look.title] : '' }; }
+function lbRowHtml(r, right) {
+  const o = lookOf(r);
+  return '<li class="lb-row' + (r.is_me ? ' me' : '') + '"><span class="lb-rk">' + (r.rnk === 1 ? '🏆' : r.rnk) + '</span><span class="lb-mug" aria-hidden="true">' + WA.mug(o.lk, 34) + '</span>' +
+    '<span class="lb-nm"><b>' + escH(r.name) + (r.is_me ? ' <i>(you)</i>' : '') + '</b>' + (o.tt ? '<small>' + escH(o.tt) + '</small>' : '') + '</span><span class="lb-pts">' + right + '</span></li>';
+}
+function rowsHtml(rows, right, empty) {
+  if (!rows) return '<div class="lb-empty">Loading…</div>';
+  if (!rows.length) return '<div class="lb-empty">' + empty + '</div>';
+  const top = rows.slice(0, 10), me = rows.find(r => r.is_me);
+  return '<ol class="lb-list">' + top.map(r => lbRowHtml(r, right(r))).join('') + (me && me.rnk > 10 ? '<li class="lb-gap" aria-hidden="true">…</li>' + lbRowHtml(me, right(me)) : '') + '</ol>';
+}
+function raceHtml(d) {
+  const wk = monOf(TODAY), last = addDays(wk, -7), s = seasonInfo();
+  let h = '';
+  const champ = d.last && d.last.find(r => r.rnk === 1);
+  if (champ && last >= AUTO_TROPHY_FROM) {
+    const o = lookOf(champ);
+    h += '<section class="rc-champ" aria-labelledby="rcC"><div class="rc-champ-mug" aria-hidden="true">' + WA.mug(o.lk, 64) + '</div><div><div class="rc-k" id="rcC">🏆 Last week’s Espresso Trophy</div><b>' + escH(champ.name) + (champ.is_me ? ' (you!)' : '') + '</b>' +
+      (o.tt ? '<small>' + escH(o.tt) + '</small>' : '') + '<div class="rc-sub">' + champ.tot + ' pts · week of ' + escH(fmtShort(last)) + '</div></div></section>';
+  }
+  h += '<section class="lb" aria-labelledby="lbH"><div class="lb-top"><h3 id="lbH">This week</h3><span class="lb-sub">Espresso Trophy race · week of ' + escH(fmtShort(wk)) + ' · updates as people play</span></div>' +
+    rowsHtml(d.week, r => '<b>' + r.tot + '</b> pts', 'No scores yet this week. Be the first on the board.') +
+    (d.week && d.week.length ? '<div class="lb-foot">Ties go to Sunday Word Search words found, then whoever got there first.</div>' : '') + '</section>';
+  h += '<section class="lb" aria-labelledby="ssH"><div class="lb-top"><h3 id="ssH">Season’s Best Sipper</h3><span class="lb-sub">Beta season · week ' + Math.max(1, Math.min(SEASON_WEEKS, s.wk)) + ' of ' + SEASON_WEEKS + ' · most Espresso Trophies, then most points</span></div>' +
+    rowsHtml(d.season, r => (r.trophies ? '<span class="ss-tr" title="Espresso Trophies">🏆' + (r.trophies > 1 ? '×' + r.trophies : '') + '</span> ' : '') + '<b>' + r.points + '</b> pts', 'Season points show up here once people start playing.') + '</section>';
+  return h;
+}
+const race = { week: null, last: null, season: null };
+let raceSeq = 0;
+async function drawRace(fresh) {
+  const m = $('raceMount'); if (!m || !ME) return;
+  if (!CLOUD_ON) { m.innerHTML = '<div class="lb"><div class="lb-empty">The Race shows everyone’s scores once you’re playing on the 7 Sips website.</div></div>'; return; }
+  if (!isLive()) { m.innerHTML = '<div class="lb"><div class="lb-empty">The race opens Monday, Nov 23.</div></div>'; return; }
+  const wk = monOf(TODAY), seq = ++raceSeq;
+  race.week = cloud.board[wk] || null; race.last = cloud.board[addDays(wk, -7)] || null; race.season = cloud.board.season || null;
+  m.innerHTML = raceHtml(race);
+  try {
+    const [a, b, c] = await Promise.all([cloudBoard(wk, fresh), cloudBoard(addDays(wk, -7)).catch(() => null), cloudSeason(fresh).catch(() => null)]);
+    if (seq !== raceSeq || activeTab !== 'race') return;
+    race.week = a; race.last = b; race.season = c; $('raceMount').innerHTML = raceHtml(race);
+  } catch (e) {
+    if (seq === raceSeq && activeTab === 'race' && !race.week) $('raceMount').innerHTML = '<div class="lb"><div class="lb-empty">Can’t reach the standings right now. Your scores are safe and will show up when you’re back online.</div></div>';
+  }
+}
+{ const _ar = afterRace; afterRace = async function () {
+    const r = await _ar.apply(this, arguments);
+    try { await cloudPushWeek(monOf(TODAY)); delete cloud.boardAt.season; cloudMark(); } catch (e) {}
+    return r;
+  }; }
+
+// ---- a small "Saved to the cloud" line in Profile, above the backup code ----
+function cloudStatusText() {
+  if (!CLOUD_ON) return '';
+  if (cloud.failing && !cloud.lastSaved) return '☁️ Cloud save will retry when you’re online. Your progress is safe on this phone.';
+  if (!cloud.lastSaved) return '☁️ Connecting to the cloud…';
+  const mins = Math.round((Date.now() - cloud.lastSaved) / 60000);
+  return '☁️ Saved to the cloud ' + (mins < 1 ? 'just now' : mins === 1 ? '1 minute ago' : mins < 60 ? mins + ' minutes ago' : 'today') + '.';
+}
+function cloudStatusPaint() { const s = $('cloudStat'); if (s) s.textContent = cloudStatusText(); }
+{ const _dp4 = drawProfile; drawProfile = function () {
+    const r = _dp4.apply(this, arguments);
+    try { const bk = $('bkH'); if (CLOUD_ON && bk && !$('cloudStat')) bk.insertAdjacentHTML('afterend', '<p class="cloud-stat" id="cloudStat" role="status">' + escH(cloudStatusText()) + '</p>'); } catch (e) {}
+    return r;
+  }; }
+
+// ---- start: upload this week and last week, check for a trophy, draw the board ----
+async function cloudBoot() {
+  if (!CLOUD_ON || !ME) return;
+  try {
+    cloudDirty = true; await cloudPushSave();
+    const wk = monOf(TODAY);
+    try { await cloudPushWeek(addDays(wk, -7)); } catch (e) {}
+    await cloudPushWeek(wk);
+    await cloudCheckTrophy();
+    if (activeTab === 'race') drawRace(true);
+  } catch (e) { cloud.failing = true; cloudStatusPaint(); }
+}
+{ const _ea = enterApp; enterApp = function () { const r = _ea.apply(this, arguments); setTimeout(cloudBoot, 300); return r; }; }
+if (ME && ME.onboarded) setTimeout(cloudBoot, 300);
+setInterval(() => { if (CLOUD_ON && ME && !document.hidden && activeTab === 'race') drawRace(true); }, 90000);
+
+// ---------------- Nov 26 (pm): owner Insights, feedback to the cloud, cleaner Profile, pull to refresh ----------------
+// Live game: the cleanup starts Fri Nov 27 (cloud go-live) and Mon Dec 7 (trophy codes).
+const CLEAN_FROM = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-11-27';   // Nov 27: live went cloud today
+const CODES_UNTIL = CLOUD_ENV === 'test' ? '2026-11-23' : '2026-12-07';
+const cleaned = () => CLOUD_ON && TODAY >= CLEAN_FROM;
+
+// ---- 1) "Your week" no longer asks players to text anyone ----
+{ const _wch = weekCardHtml; weekCardHtml = function (id, opts) {
+    if (!cleaned()) return _wch.apply(this, arguments);
+    opts = opts || {}; const r = weekReport(monOf(TODAY));
+    return '<div class="wk-card' + (opts.hi ? ' hi' : '') + '"><div class="wk-h">' + (opts.title || 'Your week') + '</div>' +
+      '<div class="wk-sub">' + (opts.sub ? escH(opts.sub) + ' ' : '') + '<b>' + r.tot + '</b> of 70 · played ' + r.played + ' of 7. Your points go to the Race tab automatically.</div></div>';
+  }; }
+{ const _sn = showNote; showNote = function (id) { if (id === 'sun' && cleaned()) return; return _sn.apply(this, arguments); }; }
+
+// ---- 2) feedback goes straight to Griffin through the cloud (falls back to copy-and-text if offline) ----
+function feedbackRow(msg) {
+  const dk = TODAY, g = raceGameOf(dk), wk = (personal['fs-week:' + monOf(dk)] || { days: {} }).days || {}, day = wk[dk];
+  const ua = (navigator.userAgent.match(/(iPhone|iPad|Android|Mac|Windows)/) || ['phone'])[0];
+  return { env: CLOUD_ENV, pid: ME.pid, name: String(ME.name || '').slice(0, 20), day: dk, game: String(titleOf(g) || '').slice(0, 40),
+    score: day ? day.points + ' pts' : 'not played', device: ua, message: String(msg).trim().slice(0, 1000) };
+}
+async function sendFeedback(msg) {
+  const t = await cloudToken();
+  await cloudApi('/rest/v1/feedback', { method: 'POST', auth: t, prefer: 'return=minimal', body: feedbackRow(msg) });
+}
+
+// ---- 3) owner: unlock once with the owner code, then an Insights screen opens from Profile ----
+let ownerKnown = null;
+async function cloudIsOwner() {
+  if (!CLOUD_ON || !ME) return false;
+  if (ownerKnown !== null) return ownerKnown;
+  try { const t = await cloudToken(); ownerKnown = (await cloudApi('/rest/v1/rpc/is_owner', { method: 'POST', auth: t, body: {} })) === true; } catch (e) { return false; }
+  return ownerKnown;
+}
+function gameNameForDow(i) { try { return titleOf(raceGameOf(addDays(monOf(TODAY), i - 1))); } catch (e) { return DAY3[i - 1]; } }
+function agoText(iso) {
+  if (!iso) return 'never';
+  const m = Math.round((Date.now() - Date.parse(iso)) / 60000);
+  return m < 2 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' hr ago' : Math.round(m / 1440) + ' days ago';
+}
+const STATUS = { today: ['Played today', 'ok'], active: ['Active this week', 'mid'], slipping: ['Slipping', 'bad'], idle: ['Not this week', 'dim'] };
+function insightsHtml(j) {
+  const s = j.summary || {}, tr = j.trend || [], mx = Math.max(1, ...tr.map(x => x.players));
+  let h = '<div class="in-tiles">' +
+    [['Players', s.players || 0], ['Played today', s.today || 0], ['Played this week', s.this_week || 0], ['Avg week pts', s.avg_week == null ? '–' : s.avg_week]]
+      .map(x => '<div class="in-tile"><b>' + escH(String(x[1])) + '</b><span>' + x[0] + '</span></div>').join('') + '</div>';
+  h += '<section class="in-sec"><h3>Players per day · last 14 days</h3><div class="in-bars" role="img" aria-label="Players per day for the last 14 days">' +
+    tr.map(x => '<div class="in-bar"><i style="height:' + Math.round(100 * x.players / mx) + '%"></i><b>' + x.players + '</b><span>' + escH(DAY3[(dowOf(x.day) + 6) % 7].slice(0, 1)) + '</span></div>').join('') + '</div></section>';
+  h += '<section class="in-sec"><h3>Players</h3>' + ((j.players || []).length ? '<div class="in-list">' + j.players.map(p => {
+    const st = STATUS[p.status] || STATUS.idle;
+    return '<div class="in-p"><div class="in-p1"><b>' + escH(p.name || '?') + '</b><span class="in-pill ' + st[1] + '">' + st[0] + '</span></div>' +
+      '<div class="in-p2">This week <b>' + p.this_tot + '</b> pts · ' + p.this_days + ' of 7 days · Last week ' + p.last_tot + '</div>' +
+      '<div class="in-p2">Streak ' + (p.streak == null ? '–' : p.streak) + (p.best ? ' (best ' + p.best + ')' : '') + ' · 🏆 ' + (p.trophies || 0) + ' · Last seen ' + agoText(p.last_seen) + '</div></div>';
+  }).join('') + '</div>' : '<div class="lb-empty">No players yet.</div>') + '</section>';
+  const g = {}; (j.games || []).forEach(x => g[x.i] = x);
+  h += '<section class="in-sec"><h3>Games · average score (0–10)</h3><table class="in-tbl"><thead><tr><th>Game</th><th>Avg</th><th>Plays</th><th>10s</th><th>0s</th></tr></thead><tbody>' +
+    [1, 2, 3, 4, 5, 6, 7].map(i => { const x = g[i]; return '<tr><td>' + DAY3[i - 1] + ' · ' + escH(gameNameForDow(i)) + '</td><td>' + (x ? x.avg : '–') + '</td><td>' + (x ? x.plays : 0) + '</td><td>' + (x ? x.tens : 0) + '</td><td>' + (x ? x.zeros : 0) + '</td></tr>'; }).join('') +
+    '</tbody></table><div class="lb-foot">Bonus: Seven Across avg ' + (j.bonus && j.bonus.sa_avg != null ? j.bonus.sa_avg + '/6' : '–') + ' (' + ((j.bonus && j.bonus.sa_n) || 0) + ' weeks) · Glide Path avg ' + (j.bonus && j.bonus.gp_avg != null ? j.bonus.gp_avg + '/7' : '–') + ' (' + ((j.bonus && j.bonus.gp_n) || 0) + ' weeks)</div></section>';
+  h += '<section class="in-sec"><h3>Feedback inbox</h3>' + ((j.feedback || []).length ? j.feedback.map(f =>
+    '<div class="in-fb"><div class="in-fb1"><b>' + escH(f.name || '?') + '</b> · ' + escH(agoText(f.at)) + '</div><div class="in-fb2">' + escH(f.message) + '</div>' +
+    '<div class="in-fb3">' + escH([f.day, f.game, f.score, f.device].filter(Boolean).join(' · ')) + '</div></div>').join('') : '<div class="lb-empty">No feedback yet.</div>') + '</section>';
+  return h;
+}
+let insSeq = 0;
+async function drawInsights() {
+  const m = $('insMount'); if (!m) return; const seq = ++insSeq;
+  if (!m.innerHTML) m.innerHTML = '<div class="lb-empty">Loading insights…</div>';
+  try {
+    const t = await cloudToken();
+    const j = await cloudApi('/rest/v1/rpc/owner_insights', { method: 'POST', auth: t, body: { p_env: CLOUD_ENV } });
+    if (seq === insSeq) { m.innerHTML = insightsHtml(j || {}); stampUpdated('insUpd'); }
+  } catch (e) { if (seq === insSeq) m.innerHTML = '<div class="lb-empty">' + (e.status === 403 ? 'Owner only.' : 'Can’t reach the cloud right now. Pull down to try again.') + '</div>'; }
+}
+function openInsights() {
+  if (!$('insightsView')) {
+    $('profileView').insertAdjacentHTML('afterend', '<section id="insightsView" aria-label="Owner insights" hidden><div class="in-top"><button type="button" class="btn sec in-back" id="insBack">‹ Profile</button>' +
+      '<span class="upd" id="insUpd" aria-live="polite"></span></div><h2 class="vw-h">Owner insights</h2><p class="in-note">Only you can see this. ' + (CLOUD_ENV === 'test' ? 'Showing Preview (test) players.' : 'Showing live players.') + '</p><div id="insMount"></div></section>');
+    $('insBack').onclick = () => showTab('profile');
+  }
+  ['play', 'race', 'profile', 'badges', 'shop'].forEach(x => { $(x + 'View').hidden = true; const b = $('tab-' + x); b.classList.remove('on'); b.setAttribute('aria-current', 'false'); });
+  activeTab = 'insights'; $('insightsView').hidden = false;
+  try { window.scrollTo({ top: 0 }); } catch (e) {}
+  drawInsights();
+}
+{ const _st = showTab; showTab = function (t) { const v = $('insightsView'); if (v) v.hidden = true; return _st.apply(this, arguments); }; }
+
+// ---- 4) cleaner bottom of Profile ----
+{ const _dp5 = drawProfile; drawProfile = function () {
+    const r = _dp5.apply(this, arguments);
+    try {
+      const x = $('profileExtra');
+      // trophy codes: only while week 1's trophy is still being handed out
+      const tr = $('trH'); if (tr && CLOUD_ON && TODAY >= CODES_UNTIL) tr.closest('section').remove();
+      if (cleaned()) {
+        // backup: folded into "Moving to a new phone?"
+        const bk = $('bkH') && $('bkH').closest('section');
+        if (bk && !$('mvPhone')) {
+          const st = $('cloudStat'); if (st) bk.before(st);
+          const d = document.createElement('details'); d.className = 'bk mv'; d.id = 'mvPhone';
+          d.innerHTML = '<summary>Moving to a new phone?</summary><p class="mv-p">Your progress is saved to the cloud automatically. To move it to a new phone, copy your backup code here, then open 7 Sips on the new phone and restore it.</p>';
+          bk.querySelector('p') && bk.querySelector('p').remove(); bk.querySelector('#bkH') && bk.querySelector('#bkH').remove();
+          bk.classList.remove('bk'); d.appendChild(bk); x.appendChild(d);
+        }
+        // feedback: send straight to Griffin
+        const fb = $('fbSec');
+        if (fb) {
+          fb.querySelector('p').textContent = 'Found a bug, a typo or have an idea? Send it straight to Griffin. Today’s game and your score are added for you.';
+          const go = $('fbGo'); go.textContent = 'Send to Griffin';
+          go.onclick = async () => {
+            const v = $('fbIn').value, box = $('cpFb');
+            if (!v.trim()) { box.innerHTML = '<div class="ob-err" role="alert">Write a line about what happened first.</div>'; return; }
+            go.disabled = true; box.innerHTML = '<div class="ob-ok">Sending…</div>';
+            try { await sendFeedback(v); $('fbIn').value = ''; box.innerHTML = '<div class="ob-ok" role="status">Sent! Thanks, Griffin reads every one.</div>'; }
+            catch (e) { copyFlow(feedbackText(v), box, 'Couldn’t send right now, so it’s copied instead. Paste it in a text to Griffin.'); }
+            go.disabled = false;
+          };
+          x.appendChild(fb);                         // feedback sits below "Your name", above "Moving to a new phone?"
+          const mv = $('mvPhone'); if (mv) x.appendChild(mv);
+        }
+      }
+      // owner: unlock form (only with #owner in the link) or the Insights button
+      if (CLOUD_ON) cloudIsOwner().then(own => {
+        if (!$('profileExtra') || activeTab !== 'profile') return;
+        if (own && !$('insOpen')) { $('profileExtra').insertAdjacentHTML('afterbegin', '<button type="button" class="btn in-open" id="insOpen">📊 Owner insights</button>'); $('insOpen').onclick = openInsights; }
+        else if (!own && /owner/.test(location.hash) && !$('ownSec')) {
+          $('profileExtra').insertAdjacentHTML('afterbegin', '<section class="bk" id="ownSec"><h3>Owner sign-in</h3><label class="ob-lab" for="ownIn">Owner code</label><input id="ownIn" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="WAKE-…"><div class="ob-err" id="ownErr" role="alert"></div><button type="button" class="btn" id="ownGo">Unlock insights</button></section>');
+          $('ownGo').onclick = async () => {
+            const e = $('ownErr'); e.className = 'ob-err'; e.textContent = 'Checking…';
+            try { const t = await cloudToken(); const ok = await cloudApi('/rest/v1/rpc/claim_owner', { method: 'POST', auth: t, body: { p_code: $('ownIn').value } });
+              if (ok === true) { ownerKnown = true; try { history.replaceState(null, '', location.pathname + location.search); } catch (er) {} drawProfile(); } else e.textContent = 'That code didn’t work.'; }
+            catch (er) { e.textContent = 'Can’t reach the cloud right now.'; }
+          };
+        }
+      });
+    } catch (e) {}
+    return r;
+  }; }
+
+// ---- 5) Race tab + Insights: "Updated just now" and pull down to refresh ----
+const updAt = {};
+function stampUpdated(id) { updAt[id] = Date.now(); paintUpdated(); }
+function paintUpdated() {
+  Object.keys(updAt).forEach(id => { const el = $(id); if (!el) return; const s = Math.round((Date.now() - updAt[id]) / 1000);
+    el.innerHTML = 'Updated ' + (s < 10 ? 'just now' : s < 60 ? s + 's ago' : Math.round(s / 60) + ' min ago') + ' · <button type="button" class="upd-btn" data-refresh="' + id + '">Refresh</button>'; });
+}
+setInterval(paintUpdated, 10000);
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-refresh]'); if (!b) return; b.dataset.refresh === 'insUpd' ? drawInsights() : drawRace(true); });
+{ const _dr = drawRace; drawRace = async function () {
+    const v = $('raceView'); if (v && !$('raceUpd')) v.querySelector('.vw-h').insertAdjacentHTML('afterend', '<div class="upd" id="raceUpd" aria-live="polite"></div>');
+    const r = await _dr.apply(this, arguments);
+    if (CLOUD_ON && activeTab === 'race' && $('raceMount') && $('raceMount').querySelector('.lb-list, .lb-empty')) stampUpdated('raceUpd');
+    return r;
+  }; }
+(function pullToRefresh() {
+  let y0 = null, pulling = false, ind = null;
+  const view = () => activeTab === 'race' ? 'race' : activeTab === 'insights' ? 'insights' : null;
+  function indicator() { if (!ind) { ind = document.createElement('div'); ind.className = 'ptr'; ind.setAttribute('aria-hidden', 'true'); document.body.appendChild(ind); } return ind; }
+  document.addEventListener('touchstart', e => { y0 = (view() && window.scrollY <= 0 && e.touches.length === 1) ? e.touches[0].clientY : null; pulling = false; }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (y0 == null) return; const dy = e.touches[0].clientY - y0; if (dy <= 0) return;
+    if (window.scrollY <= 0 && e.cancelable) e.preventDefault();   // Nov 27: stops Safari's own pull-to-reload (it reloaded the game onto the Play tab)
+    const i = indicator(); i.style.transform = 'translate(-50%,' + Math.min(70, dy / 2) + 'px)'; i.style.opacity = Math.min(1, dy / 120);
+    pulling = dy > 110; i.textContent = pulling ? '↻ Release to refresh' : '↓ Pull to refresh';
+  }, { passive: false });
+  document.addEventListener('touchend', () => {
+    if (y0 == null) return; y0 = null; const i = indicator();
+    if (pulling) { i.textContent = 'Refreshing…'; (view() === 'insights' ? drawInsights() : drawRace(true)).then(() => { i.style.opacity = 0; i.style.transform = 'translate(-50%,0)'; }); }
+    else { i.style.opacity = 0; i.style.transform = 'translate(-50%,0)'; }
+    pulling = false;
+  });
+  // stop Safari's own pull-to-reload on these two screens, so pulling refreshes the standings instead of reloading the game
+  { const _st2 = showTab; showTab = function (t) { const r = _st2.apply(this, arguments); document.documentElement.classList.toggle('no-ptr', t === 'race'); return r; }; }
+  { const _oi = openInsights; openInsights = function () { const r = _oi.apply(this, arguments); document.documentElement.classList.add('no-ptr'); return r; }; }
+})();
+
+// ---- 6) old "phone only / texts him" wording, updated for the cloud ----
+const COPY_FIX = [
+  ['During the beta, Griffin runs the race from the weeks everyone texts him.', 'Scores go to the Race tab automatically, and the weekly winner’s trophy appears on its own.'],
+  ['Your progress is saved on this phone only. Badges', 'Your progress is saved on this phone and backed up to the cloud. Badges'],
+  ['Your progress is saved on this phone only. There’s no account and nothing to download.', 'Your progress saves automatically. No email, no password and nothing to download.']
+];
+function fixCopy(root) {
+  if (!cleaned() || !root) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+  while ((n = w.nextNode())) COPY_FIX.forEach(f => { if (n.nodeValue.indexOf(f[0]) >= 0) n.nodeValue = n.nodeValue.split(f[0]).join(f[1]); });
+}
+{ const _dp6 = drawProfile; drawProfile = function () { const r = _dp6.apply(this, arguments); try { fixCopy($('profileView')); } catch (e) {} return r; }; }
+{ const _so = showOnboarding; showOnboarding = function () { const r = _so.apply(this, arguments); try { fixCopy(document.body); } catch (e) {} return r; }; }
+try { fixCopy(document.body); } catch (e) {}
+
+// ---------------- Nov 26 (pm): daily Wakeline splash with holidays, public-name notice, name filter ----------------
+
+// ---- holidays (US): fixed dates plus the ones that move every year ----
+function nthDow(y, m, dow, n) {                 // n-th weekday (0=Sun) of month m (1-12); n = -1 for the last one
+  if (n > 0) { const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay(); return Date.UTC(y, m - 1, 1 + ((dow - first + 7) % 7) + 7 * (n - 1)); }
+  const last = new Date(Date.UTC(y, m, 0)), ld = last.getUTCDay(); return Date.UTC(y, m - 1, last.getUTCDate() - ((ld - dow + 7) % 7));
+}
+function easterUTC(y) {                          // Anonymous Gregorian algorithm
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3),
+    h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451),
+    mo = Math.floor((h + l - 7 * m + 114) / 31), da = ((h + l - 7 * m + 114) % 31) + 1;
+  return Date.UTC(y, mo - 1, da);
+}
+const keyOfUTC = t => new Date(t).toISOString().slice(0, 10);
+function holidayOf(dk) {
+  const y = +dk.slice(0, 4), md = dk.slice(5);
+  const fixed = {
+    '01-01': ['🎉', 'Happy New Year'], '02-14': ['💘', 'Happy Valentine’s Day'], '03-17': ['☘️', 'Happy St. Patrick’s Day'],
+    '06-19': ['🎉', 'Celebrating Juneteenth'], '07-04': ['🎆', 'Happy Fourth of July'], '10-31': ['🎃', 'Happy Halloween'],
+    '11-11': ['🇺🇸', 'Veterans Day · Thank you to all who served'], '12-24': ['🎄', 'Merry Christmas Eve'], '12-25': ['🎄', 'Merry Christmas'], '12-31': ['🥂', 'Happy New Year’s Eve']
+  };
+  if (fixed[md]) return fixed[md];
+  const moving = [
+    [nthDow(y, 1, 1, 3), '🕊️', 'Martin Luther King Jr. Day'], [nthDow(y, 2, 1, 3), '🇺🇸', 'Happy Presidents’ Day'], [easterUTC(y), '🐣', 'Happy Easter'],
+    [nthDow(y, 5, 0, 2), '💐', 'Happy Mother’s Day'], [nthDow(y, 5, 1, -1), '🇺🇸', 'Memorial Day · Remembering those who served'],
+    [nthDow(y, 6, 0, 3), '👔', 'Happy Father’s Day'], [nthDow(y, 9, 1, 1), '🛠️', 'Happy Labor Day'], [nthDow(y, 11, 4, 4), '🦃', 'Happy Thanksgiving']
+  ];
+  const hit = moving.find(x => keyOfUTC(x[0]) === dk);
+  return hit ? [hit[1], hit[2]] : null;
+}
+
+// ---- the splash: once a day, the first time the game opens; short, tap to skip ----
+const DAILY_SPLASH_KEY = NS + 'splash:day';
+maybeSplash = function () {
+  if (!ME || !ME.onboarded || !isLive(TODAY)) return;
+  try { if (localStorage.getItem('sips-nosplash') === '1') return; } catch (e) {}
+  let firstEver = false;
+  try {
+    if (localStorage.getItem(DAILY_SPLASH_KEY) === TODAY) return;
+    localStorage.setItem(DAILY_SPLASH_KEY, TODAY);
+    if (!localStorage.getItem(SPLASH_KEY)) { localStorage.setItem(SPLASH_KEY, '1'); firstEver = true; }
+  } catch (e) { return; }
+  if (document.querySelector('.wl-splash')) return;
+  const hol = holidayOf(TODAY), g = titleOf(raceGameOf(TODAY)), day = DAYLONG[dowOf(TODAY)];
+  const d = document.createElement('div'); d.className = 'wl-splash daily' + (hol ? ' hol' : '');
+  d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Wakeline Media · ' + (hol ? hol[1] + ' · ' : '') + day + ' · ' + g);
+  d.innerHTML = WL_LOGO('sp') + '<div class="k">Wakeline Media presents</div><h2>7 Sips</h2>' +
+    (hol ? '<div class="sp-hol"><span aria-hidden="true">' + hol[0] + '</span> ' + escH(hol[1]) + '</div>' : '') +
+    '<div class="sp-day">' + escH(day) + ' · ' + escH(g) + '</div>' +
+    (firstEver ? '<p>Seven morning games, one a day. Your weekly points race for the Espresso Trophy.</p><button type="button" id="splashGo">Let’s play</button>' : '<div class="sp-tap">Tap to start</div>');
+  document.body.appendChild(d);
+  const close = () => { if (d.classList.contains('out')) return; d.classList.add('out'); setTimeout(() => d.remove(), 480); };
+  d.addEventListener('click', close);
+  document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape' || e.key === 'Enter') { close(); document.removeEventListener('keydown', esc); } });
+  if (!firstEver) setTimeout(close, reducedMotion() ? 1600 : 2700);
+  else setTimeout(() => { try { d.querySelector('#splashGo').focus(); } catch (e) {} }, 2200);
+};
+try { maybeSplash(); } catch (e) {}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { try { maybeSplash(); } catch (e) {} } });   // left open overnight: still greets the new day
+
+// ---- names: shown on the Race tab, so no profanity (the database checks the same list) ----
+const NAME_SUB = ['fuck', 'shit', 'cunt', 'nigg', 'fagg', 'bitch', 'whore', 'slut', 'rapist', 'porn', 'pussy', 'penis', 'vagina', 'dildo', 'jizz', 'kike', 'retard', 'twat', 'bastard', 'asshole', 'motherf', 'hitler', 'nazi', 'cocksuck', 'blowjob', 'tranny', 'bollock', 'boob', 'horny', 'testicle'];
+const NAME_WORD = ['ass', 'arse', 'dick', 'cock', 'cum', 'tit', 'tits', 'spic', 'chink', 'gook', 'fag', 'homo', 'sex', 'sexy', 'hoe', 'hoes', 'rape', 'kys', 'wtf', 'stfu', 'kkk', 'coon', 'damn', 'piss', 'crap', 'nude', 'nudes', 'balls', 'butt', 'hell', 'anal', 'anus', 'semen', 'wank', 'wanker'];
+const NN_FROM = '0134@5\u002478!|', NN_TO = 'oieaasstbii';   // leet letters -> plain letters (\u0024 is the dollar sign)
+function nameNorm(s) { return String(s || '').toLowerCase().split('').map(c => { const i = NN_FROM.indexOf(c); return i >= 0 ? NN_TO[i] : c; }).join(''); }
+function badName(s) {
+  const n = nameNorm(s), joined = n.replace(/[^a-z]/g, ''), words = n.split(/[^a-z]+/).filter(Boolean);
+  return NAME_SUB.some(w => joined.indexOf(w) >= 0) || words.some(w => NAME_WORD.indexOf(w) >= 0) || NAME_WORD.some(w => w.length >= 4 && joined === w);
+}
+// onboarding + "Change my name": refuse blocked names before saving
+document.addEventListener('submit', e => {
+  const f = e.target; if (!f || (f.id !== 'obForm' && f.id !== 'nmForm')) return;
+  const inp = f.id === 'obForm' ? $('obName') : $('nmIn'), err = f.id === 'obForm' ? $('obErr') : $('nmErr');
+  if (inp && badName(inp.value)) { e.preventDefault(); e.stopImmediatePropagation(); if (err) err.textContent = 'Please pick a different name. It shows on the Race tab for everyone.'; try { inp.focus(); } catch (er) {} }
+}, true);
+COPY_FIX.push(['Shown on your profile and on the week you text to Griffin. 1 to 20 characters.', 'Shown on the Race leaderboard for other players, so a first name or nickname is best. 1 to 20 characters.']);
+try { fixCopy(document.body); } catch (e) {}
+// "Change my name" form gets the same reminder
+{ const _dp7 = drawProfile; drawProfile = function () {
+    const r = _dp7.apply(this, arguments);
+    try { const b = $('nmEdit'); if (b) b.addEventListener('click', () => setTimeout(() => { const e = $('nmErr'); if (e && !$('nmHelp')) e.insertAdjacentHTML('beforebegin', '<div class="ob-help" id="nmHelp">Shown on the Race tab for other players.</div>'); }, 0)); } catch (e) {}
+    return r; }; }
+
+// ---- players who joined before the leaderboard: a one-time heads-up ----
+function maybeNameNote() {
+  if (!cleaned() || !ME || !ME.onboarded || !isLive()) return;
+  if (personal['note:name-public']) return;
+  if ((ME.created || 0) >= Date.parse(CLEAN_FROM + 'T05:00:00Z')) { personal['note:name-public'] = 1; return; }   // joined after: they saw the notice when signing up
+  personal['note:name-public'] = 1;
+  showNote('name-public', '<b>New: the Race tab.</b> Your name <b>' + escH(ME.name) + '</b> now shows on the weekly standings for other players. You can change it anytime in Profile.');
+}
+{ const _ea2 = enterApp; enterApp = function () { const r = _ea2.apply(this, arguments); setTimeout(maybeNameNote, 0); return r; }; }
+try { maybeNameNote(); } catch (e) {}
+
+// ---- Nov 27: a reload keeps you on the tab you were on (it always jumped back to Play) ----
+{ const _st3 = showTab; showTab = function (t) { const r = _st3.apply(this, arguments); try { sessionStorage.setItem('sips-tab', t + '|' + TODAY); } catch (e) {} return r; }; }
+function restoreTab() {
+  let t = null; try { const v = (sessionStorage.getItem('sips-tab') || '').split('|'); if (v[1] === TODAY) t = v[0]; } catch (e) {}   // a new day starts on Play
+  if (ME && ME.onboarded && t && t !== 'play' && ['race', 'profile', 'badges', 'shop'].indexOf(t) >= 0 && $(t + 'View') && activeTab !== t) showTab(t);
+}
+try { restoreTab(); } catch (e) {}
 
 </script></body></html>
